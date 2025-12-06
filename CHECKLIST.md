@@ -2,50 +2,87 @@
 
 ## Status Geral do Projeto
 
-**Última Atualização:** 03/12/2024  
-**Versão:** 3.0  
-**Fase Atual:** FASE 0 - Preparação
+**Última Atualização:** 06/12/2025  
+**Versão:** 4.0  
+**Fase Atual:** FASE 0 - Preparação (Final)
 
 ---
 
-## 🚀 FASE 0 - PREPARAÇÃO (2 semanas)
+## 📊 RESUMO EXECUTIVO
 
-| Item | Status | Responsável | Data |
-|------|--------|-------------|------|
-| ✅ Modelo de Dados | **COMPLETO** | 🗄️ DBA | 03/12/2024 |
-| ✅ Documentação de Segurança | **COMPLETO** | 🔐 Segurança | 03/12/2024 |
-| ✅ Setup Repositório | **COMPLETO** | 🚀 DevOps | 03/12/2024 |
-| ✅ Atualizar CHECKLIST | **COMPLETO** | 📚 Guardião | 03/12/2024 |
-| 🔜 Criar D1 Database | Pendente | 🚀 DevOps | - |
-| 🔜 Criar KV Namespaces | Pendente | 🚀 DevOps | - |
-| 🔜 Criar R2 Bucket | Pendente | 🚀 DevOps | - |
+| Área | Progresso | Status |
+|------|-----------|--------|
+| Documentação | 95% | ✅ |
+| Infraestrutura Cloudflare | 100% | ✅ |
+| Código Fonte | 15% | 🟡 |
+| Implementação | 0% | ⏳ |
 
 ---
 
-## 📊 RESUMO DO PROGRESSO
+## 🚀 FASE 0 - PREPARAÇÃO ✅ COMPLETA
 
-### Documentação Técnica
+### Documentação
 
-| Documento | Status | Linhas | Localização |
-|-----------|--------|--------|-------------|
-| Sumário Geral | ✅ | ~1.851 | docs/01-sumario/README.md |
-| Regras de Negócio | ⏳ | - | docs/02-regras-negocio/ |
-| Casos de Uso | ⏳ | - | docs/03-casos-uso/ |
-| Fluxogramas | ✅ | ~1.709 | docs/04-fluxogramas/README.md |
-| **Modelo de Dados** | ✅ | **4.179** | docs/05-modelo-dados/README.md |
-| Especificação de Telas | ⏳ | - | docs/06-especificacao-telas/ |
-| APIs | ⏳ | - | docs/07-apis/ |
-| Integrações | ⏳ | - | docs/08-integracoes/ |
-| Manuais | ⏳ | - | docs/09-manuais/ |
-| **Segurança** | ✅ | **816** | docs/10-anexos/SEGURANCA.md |
+| Item | Status | Linhas | Data |
+|------|--------|--------|------|
+| ✅ 01-sumario | **COMPLETO** | 1.851 | 03/12/2024 |
+| ✅ 02-regras-negocio | **COMPLETO** | 685 (295 regras) | 03/12/2024 |
+| ✅ 03-casos-uso | **COMPLETO** | 462 (145 casos) | 03/12/2024 |
+| ✅ 04-fluxogramas | **COMPLETO** | 1.709 (25 fluxos) | 03/12/2024 |
+| ✅ 05-modelo-dados | **COMPLETO** | 4.179 (180 tabelas) | 03/12/2024 |
+| ✅ 06-especificacao-telas | **COMPLETO** | 3.776 (203 telas) | 03/12/2024 |
+| ✅ 07-apis | **COMPLETO** | - | 06/12/2025 |
+| ✅ 08-integracoes | **COMPLETO** | 334 | 06/12/2025 |
+| 🟡 09-manuais | Em construção | - | - |
+| ✅ 10-anexos/SEGURANCA | **COMPLETO** | 816 | 03/12/2024 |
+| ✅ 10-anexos/GUIA_NUVEM_FISCAL | **COMPLETO** | 114 | 06/12/2025 |
+
+**Total de Documentação:** ~13.500+ linhas
+
+### Infraestrutura Cloudflare
+
+| Recurso | Nome | ID | Status |
+|---------|------|-------|--------|
+| ✅ D1 Database | Planac-erp-database | `7d9ff002-0a33-4a10-9677-6c5c654a3a56` | Criado |
+| ✅ KV Cache | Planac-erp-cache | `5b02f88e3de2498db31e9679b4c291e5` | Criado |
+| ✅ KV Sessions | Planac-erp-sessions | `9b9cef95c4f741a6a2ac9de75e4e568c` | Criado |
+| ✅ KV Rate Limit | Planac-erp-rate-limit | `f9991a8379d74873a8030e42dad416bd` | Criado |
+| ✅ R2 Storage | planac-erp-storage | - | Criado |
 
 ### Código Fonte
 
 | Package | Status | Descrição |
 |---------|--------|-----------|
-| @planac/api | ✅ Estrutura | Backend Cloudflare Workers + Hono |
-| @planac/web | ✅ Estrutura | Frontend React + Vite + Tailwind |
-| @planac/shared | ✅ Estrutura | Types, Utils, Validations |
+| ✅ Monorepo Setup | **COMPLETO** | npm workspaces + turbo |
+| ✅ @planac/api | Estrutura base | Hono + middlewares |
+| ✅ @planac/shared | Estrutura base | Types + Utils + Zod |
+| ✅ @planac/web | Estrutura base | React + Vite |
+| ✅ wrangler.toml | **ATUALIZADO** | IDs reais + Nuvem Fiscal |
+| ✅ .env.example | **CRIADO** | Template de variáveis |
+
+### Integrações Externas
+
+| Integração | Status | Credenciais |
+|------------|--------|-------------|
+| ✅ Nuvem Fiscal | **CONFIGURADO** | Client ID: `AJReDlHes8aBNlTzTF9X` |
+
+---
+
+## 🔜 FASE 1 - CORE (Próxima)
+
+**Duração estimada:** 4 semanas
+
+| Item | Status | Responsável |
+|------|--------|-------------|
+| ⏳ Migrations do banco (Core) | Pendente | 🗄️ DBA |
+| ⏳ Autenticação (JWT + 2FA) | Pendente | ⚙️ Backend |
+| ⏳ Multi-tenant middleware | Pendente | ⚙️ Backend |
+| ⏳ CRUD Empresas | Pendente | ⚙️ Backend |
+| ⏳ CRUD Usuários | Pendente | ⚙️ Backend |
+| ⏳ Sistema de Permissões | Pendente | ⚙️ Backend |
+| ⏳ Tela de Login | Pendente | 🌐 Frontend |
+| ⏳ Layout base | Pendente | 🌐 Frontend |
+| ⏳ Testes unitários | Pendente | ✅ QA |
 
 ---
 
@@ -53,77 +90,87 @@
 
 ```
 Planac-Revisado/
-├── README.md                    # Visão geral do projeto
-├── CHECKLIST.md                 # Este arquivo
-├── DEV.com.md                   # Documentação da equipe DEV.com
-├── _historico/                  # Versões anteriores
-├── docs/                        # Documentação técnica
-│   ├── 01-sumario/             ✅ Completo
-│   ├── 02-regras-negocio/      ⏳ Em definição
-│   ├── 03-casos-uso/           ⏳ Em definição
-│   ├── 04-fluxogramas/         ✅ 25 fluxogramas
-│   ├── 05-modelo-dados/        ✅ 180 tabelas
-│   ├── 06-especificacao-telas/ ⏳ Pendente
-│   ├── 07-apis/                ⏳ Pendente
-│   ├── 08-integracoes/         ⏳ Pendente
-│   ├── 09-manuais/             ⏳ Pendente
-│   └── 10-anexos/              ✅ Segurança
-└── src/                         # Código fonte
-    ├── package.json            ✅ Monorepo config
-    ├── turbo.json              ✅ Turborepo config
-    ├── wrangler.toml           ✅ Cloudflare config
-    ├── tsconfig.json           ✅ TypeScript config
+├── README.md
+├── CHECKLIST.md                 ← Este arquivo
+├── DEV.com.md
+├── _historico/
+├── docs/
+│   ├── 01-sumario/             ✅ 1.851 linhas
+│   ├── 02-regras-negocio/      ✅ 685 linhas (295 regras)
+│   ├── 03-casos-uso/           ✅ 462 linhas (145 casos)
+│   ├── 04-fluxogramas/         ✅ 1.709 linhas (25 fluxos)
+│   ├── 05-modelo-dados/        ✅ 4.179 linhas (180 tabelas)
+│   ├── 06-especificacao-telas/ ✅ 3.776 linhas (203 telas)
+│   ├── 07-apis/                ✅ Documentado
+│   ├── 08-integracoes/         ✅ 334 linhas (Nuvem Fiscal)
+│   ├── 09-manuais/             🟡 Em construção
+│   └── 10-anexos/
+│       ├── README.md
+│       ├── SEGURANCA.md        ✅ 816 linhas
+│       └── GUIA_NUVEM_FISCAL.md ✅ 114 linhas
+└── src/
+    ├── package.json            ✅
+    ├── turbo.json              ✅
+    ├── tsconfig.json           ✅
+    ├── wrangler.toml           ✅ Atualizado com IDs
+    ├── .env.example            ✅ Novo
     └── packages/
-        ├── api/                ✅ Backend estrutura
-        ├── web/                ✅ Frontend estrutura
-        └── shared/             ✅ Código compartilhado
+        ├── api/                ✅ Estrutura base
+        ├── shared/             ✅ Types + Utils
+        └── web/                ✅ Estrutura base
 ```
 
 ---
 
-## 📈 MÉTRICAS
+## 📈 MÉTRICAS DO PROJETO
 
 | Métrica | Valor |
 |---------|-------|
 | Total de Tabelas | 180 |
+| Total de Regras de Negócio | 295 |
+| Total de Casos de Uso | 145 |
 | Total de Fluxogramas | 25 |
-| Linhas de Documentação | ~8.500+ |
+| Total de Telas Especificadas | 203 |
+| Linhas de Documentação | ~13.500+ |
 | Capítulos do Sistema | 28 |
 | Módulos Cobertos | 18 |
 
 ---
 
-## 🎯 PRÓXIMOS PASSOS
+## 🎯 PRÓXIMOS MARCOS
 
-### Imediato (Fase 0 - Finalizar)
-1. ✅ ~~Modelo de Dados~~
-2. ✅ ~~Documentação de Segurança~~
-3. ✅ ~~Setup Repositório~~
-4. 🔜 Criar recursos no Cloudflare (D1, KV, R2)
-5. 🔜 Primeiro migration do banco
-
-### Fase 1 - Módulo Base (4 semanas)
-- Autenticação (Login, JWT, 2FA)
-- Multi-tenant
-- CRUD de Empresas
-- CRUD de Usuários
-- Permissões
-
-### Fase 2 - Cadastros (3 semanas)
-- Clientes
-- Fornecedores
-- Produtos
-- Categorias
+| Marco | Fase | Previsão | Entregável |
+|-------|------|----------|------------|
+| 🔜 **Core Funcional** | 1 | +4 semanas | Auth + Multi-tenant + Empresas |
+| ⏳ **Cadastros** | 1 | +3 semanas | Clientes + Produtos + Fornecedores |
+| ⏳ **Comercial MVP** | 1 | +4 semanas | Orçamentos + Pedidos |
+| ⏳ **Fiscal Básico** | 1 | +2 semanas | NF-e via Nuvem Fiscal |
+| ⏳ **Financeiro Básico** | 1 | +2 semanas | Contas a Receber |
+| 🚀 **Go-Live MVP** | 1 | +15 semanas | Sistema em produção |
 
 ---
 
 ## 📚 LINKS ÚTEIS
 
 - [Repositório GitHub](https://github.com/Ropetr/Planac-Revisado)
-- [Modelo de Dados](https://github.com/Ropetr/Planac-Revisado/blob/main/docs/05-modelo-dados/README.md)
-- [Documentação de Segurança](https://github.com/Ropetr/Planac-Revisado/blob/main/docs/10-anexos/SEGURANCA.md)
-- [Fluxogramas](https://github.com/Ropetr/Planac-Revisado/blob/main/docs/04-fluxogramas/README.md)
+- [Modelo de Dados](./docs/05-modelo-dados/README.md)
+- [Documentação de Segurança](./docs/10-anexos/SEGURANCA.md)
+- [Guia Nuvem Fiscal](./docs/10-anexos/GUIA_NUVEM_FISCAL.md)
+- [Integrações](./docs/08-integracoes/README.md)
+- [Cloudflare Dashboard](https://dash.cloudflare.com)
+- [Nuvem Fiscal](https://app.nuvemfiscal.com.br)
 
 ---
 
-*Checklist atualizado em 03/12/2024 pelo 📚 Guardião da Documentação*
+## 📝 HISTÓRICO DE ATUALIZAÇÕES
+
+| Data | Versão | Alterações |
+|------|--------|------------|
+| 06/12/2025 | 4.0 | Varredura completa, IDs Cloudflare, Nuvem Fiscal |
+| 03/12/2024 | 3.0 | Documentação completa |
+| 03/12/2024 | 2.0 | Modelo de dados 180 tabelas |
+| 03/12/2024 | 1.0 | Versão inicial |
+
+---
+
+*Checklist atualizado em 06/12/2025 por 🏢 DEV.com - Mesa de Especialistas*
