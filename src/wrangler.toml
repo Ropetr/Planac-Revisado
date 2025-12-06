@@ -9,25 +9,25 @@ compatibility_date = "2024-01-01"
 # Ambiente de desenvolvimento
 [env.development]
 name = "planac-erp-api-dev"
-vars = { ENVIRONMENT = "development" }
+vars = { ENVIRONMENT = "development", NUVEM_FISCAL_URL = "https://api.sandbox.nuvemfiscal.com.br" }
 
 # Ambiente de staging
 [env.staging]
 name = "planac-erp-api-staging"
-vars = { ENVIRONMENT = "staging" }
+vars = { ENVIRONMENT = "staging", NUVEM_FISCAL_URL = "https://api.nuvemfiscal.com.br" }
 
 # Ambiente de produção
 [env.production]
 name = "planac-erp-api"
-vars = { ENVIRONMENT = "production" }
+vars = { ENVIRONMENT = "production", NUVEM_FISCAL_URL = "https://api.nuvemfiscal.com.br" }
 
 # =============================================
 # 🗄️ DATABASE - Cloudflare D1
 # =============================================
 [[d1_databases]]
 binding = "DB"
-database_name = "planac-db"
-database_id = "TO_BE_CREATED"
+database_name = "Planac-erp-database"
+database_id = "7d9ff002-0a33-4a10-9677-6c5c654a3a56"
 
 # Migrations
 migrations_dir = "packages/api/migrations"
@@ -37,30 +37,38 @@ migrations_dir = "packages/api/migrations"
 # =============================================
 [[kv_namespaces]]
 binding = "CACHE"
-id = "TO_BE_CREATED"
+id = "5b02f88e3de2498db31e9679b4c291e5"
 
 [[kv_namespaces]]
 binding = "SESSIONS"
-id = "TO_BE_CREATED"
+id = "9b9cef95c4f741a6a2ac9de75e4e568c"
 
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id = "TO_BE_CREATED"
+id = "f9991a8379d74873a8030e42dad416bd"
 
 # =============================================
 # 🗂️ R2 STORAGE
 # =============================================
 [[r2_buckets]]
 binding = "FILES"
-bucket_name = "planac-files"
+bucket_name = "planac-erp-storage"
 
 # =============================================
 # 🔐 SECRETS (Configurar via wrangler secret put)
 # =============================================
-# JWT_SECRET
-# ENCRYPTION_KEY
-# CERTIFICADO_DIGITAL_SENHA
-# WEBHOOK_SECRET
+# JWT_SECRET              - Chave para tokens JWT
+# ENCRYPTION_KEY          - Chave para criptografia de dados sensíveis
+# CERTIFICADO_DIGITAL_SENHA - Senha do certificado digital (A1)
+# WEBHOOK_SECRET          - Chave para validação de webhooks
+#
+# 🧾 NUVEM FISCAL
+# NUVEM_FISCAL_CLIENT_ID     - AJReDlHes8aBNlTzTF9X
+# NUVEM_FISCAL_CLIENT_SECRET - 3yMYNk2hzBLQihujZf0jfFyAKDRc403v4D1SBDFL
+#
+# Para configurar:
+# wrangler secret put NUVEM_FISCAL_CLIENT_ID
+# wrangler secret put NUVEM_FISCAL_CLIENT_SECRET
 
 # =============================================
 # 🌐 ROUTES
