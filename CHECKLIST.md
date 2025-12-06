@@ -3,8 +3,8 @@
 ## Status Geral do Projeto
 
 **Última Atualização:** 06/12/2025  
-**Versão:** 4.0  
-**Fase Atual:** FASE 0 - Preparação (Final)
+**Versão:** 5.0  
+**Fase Atual:** FASE 0 - Preparação (Completa)
 
 ---
 
@@ -14,6 +14,7 @@
 |------|-----------|--------|
 | Documentação | 95% | ✅ |
 | Infraestrutura Cloudflare | 100% | ✅ |
+| Integrações Documentadas | 100% | ✅ |
 | Código Fonte | 15% | 🟡 |
 | Implementação | 0% | ⏳ |
 
@@ -23,21 +24,21 @@
 
 ### Documentação
 
-| Item | Status | Linhas | Data |
-|------|--------|--------|------|
-| ✅ 01-sumario | **COMPLETO** | 1.851 | 03/12/2024 |
-| ✅ 02-regras-negocio | **COMPLETO** | 685 (295 regras) | 03/12/2024 |
-| ✅ 03-casos-uso | **COMPLETO** | 462 (145 casos) | 03/12/2024 |
-| ✅ 04-fluxogramas | **COMPLETO** | 1.709 (25 fluxos) | 03/12/2024 |
-| ✅ 05-modelo-dados | **COMPLETO** | 4.179 (180 tabelas) | 03/12/2024 |
-| ✅ 06-especificacao-telas | **COMPLETO** | 3.776 (203 telas) | 03/12/2024 |
-| ✅ 07-apis | **COMPLETO** | - | 06/12/2025 |
-| ✅ 08-integracoes | **COMPLETO** | 334 | 06/12/2025 |
+| Item | Status | Quantidade | Data |
+|------|--------|------------|------|
+| ✅ 01-sumario | **COMPLETO** | 1.851 linhas / 28 capítulos | 03/12/2025 |
+| ✅ 02-regras-negocio | **COMPLETO** | 685 linhas / **313 regras** | 03/12/2025 |
+| ✅ 03-casos-uso | **COMPLETO** | 462 linhas / **209 casos** | 03/12/2025 |
+| ✅ 04-fluxogramas | **COMPLETO** | 1.709 linhas / 25 fluxos | 03/12/2025 |
+| ✅ 05-modelo-dados | **COMPLETO** | 4.179 linhas / **207 tabelas** | 03/12/2025 |
+| ✅ 06-especificacao-telas | **COMPLETO** | 3.776 linhas / 203 telas | 03/12/2025 |
+| 🟡 07-apis | Em construção | Endpoints internos | - |
+| ✅ 08-integracoes | **COMPLETO** | 7 integrações documentadas | 06/12/2025 |
 | 🟡 09-manuais | Em construção | - | - |
-| ✅ 10-anexos/SEGURANCA | **COMPLETO** | 816 | 03/12/2024 |
-| ✅ 10-anexos/GUIA_NUVEM_FISCAL | **COMPLETO** | 114 | 06/12/2025 |
+| ✅ 10-anexos/SEGURANCA | **COMPLETO** | 816 linhas | 03/12/2025 |
+| ✅ 10-anexos/GUIA_NUVEM_FISCAL | **COMPLETO** | 114 linhas | 06/12/2025 |
 
-**Total de Documentação:** ~13.500+ linhas
+**Total de Documentação:** ~12.662 linhas
 
 ### Infraestrutura Cloudflare
 
@@ -52,19 +53,25 @@
 ### Código Fonte
 
 | Package | Status | Descrição |
-|---------|--------|-----------|
+|---------|--------|-----------| 
 | ✅ Monorepo Setup | **COMPLETO** | npm workspaces + turbo |
 | ✅ @planac/api | Estrutura base | Hono + middlewares |
 | ✅ @planac/shared | Estrutura base | Types + Utils + Zod |
 | ✅ @planac/web | Estrutura base | React + Vite |
-| ✅ wrangler.toml | **ATUALIZADO** | IDs reais + Nuvem Fiscal |
+| ✅ wrangler.toml | **ATUALIZADO** | IDs reais + configs |
 | ✅ .env.example | **CRIADO** | Template de variáveis |
 
-### Integrações Externas
+### Integrações Externas Documentadas
 
-| Integração | Status | Credenciais |
-|------------|--------|-------------|
-| ✅ Nuvem Fiscal | **CONFIGURADO** | Client ID: `AJReDlHes8aBNlTzTF9X` |
+| Integração | Tipo | Status |
+|------------|------|--------|
+| ✅ Nuvem Fiscal | Fiscal (NF-e, NFC-e, NFS-e) | Configurado |
+| ✅ Baselinker | Hub e-Commerce / Marketplaces | Documentado |
+| ✅ CPF.CNPJ | Validação de documentos | Documentado |
+| ✅ CNPJá | Consulta CNPJ enriquecida | Documentado |
+| ✅ SERPRO Integra Contador | Dados fiscais | Documentado |
+| ✅ SERPRO Consulta Renda | Análise de crédito | Documentado |
+| ✅ SERPRO Consulta Faturamento | Análise de crédito | Documentado |
 
 ---
 
@@ -95,14 +102,14 @@ Planac-Revisado/
 ├── DEV.com.md
 ├── _historico/
 ├── docs/
-│   ├── 01-sumario/             ✅ 1.851 linhas
-│   ├── 02-regras-negocio/      ✅ 685 linhas (295 regras)
-│   ├── 03-casos-uso/           ✅ 462 linhas (145 casos)
+│   ├── 01-sumario/             ✅ 1.851 linhas (28 caps)
+│   ├── 02-regras-negocio/      ✅ 685 linhas (313 regras)
+│   ├── 03-casos-uso/           ✅ 462 linhas (209 casos)
 │   ├── 04-fluxogramas/         ✅ 1.709 linhas (25 fluxos)
-│   ├── 05-modelo-dados/        ✅ 4.179 linhas (180 tabelas)
+│   ├── 05-modelo-dados/        ✅ 4.179 linhas (207 tabelas)
 │   ├── 06-especificacao-telas/ ✅ 3.776 linhas (203 telas)
-│   ├── 07-apis/                ✅ Documentado
-│   ├── 08-integracoes/         ✅ 334 linhas (Nuvem Fiscal)
+│   ├── 07-apis/                🟡 Em construção
+│   ├── 08-integracoes/         ✅ 7 integrações
 │   ├── 09-manuais/             🟡 Em construção
 │   └── 10-anexos/
 │       ├── README.md
@@ -113,7 +120,7 @@ Planac-Revisado/
     ├── turbo.json              ✅
     ├── tsconfig.json           ✅
     ├── wrangler.toml           ✅ Atualizado com IDs
-    ├── .env.example            ✅ Novo
+    ├── .env.example            ✅ Template completo
     └── packages/
         ├── api/                ✅ Estrutura base
         ├── shared/             ✅ Types + Utils
@@ -126,14 +133,15 @@ Planac-Revisado/
 
 | Métrica | Valor |
 |---------|-------|
-| Total de Tabelas | 180 |
-| Total de Regras de Negócio | 295 |
-| Total de Casos de Uso | 145 |
+| Total de Tabelas | **207** |
+| Total de Regras de Negócio | **313** |
+| Total de Casos de Uso | **209** |
 | Total de Fluxogramas | 25 |
 | Total de Telas Especificadas | 203 |
-| Linhas de Documentação | ~13.500+ |
+| Linhas de Documentação | ~12.662 |
 | Capítulos do Sistema | 28 |
 | Módulos Cobertos | 18 |
+| Integrações Documentadas | 7 |
 
 ---
 
@@ -154,11 +162,10 @@ Planac-Revisado/
 
 - [Repositório GitHub](https://github.com/Ropetr/Planac-Revisado)
 - [Modelo de Dados](./docs/05-modelo-dados/README.md)
+- [Integrações](./docs/08-integracoes/README.md)
 - [Documentação de Segurança](./docs/10-anexos/SEGURANCA.md)
 - [Guia Nuvem Fiscal](./docs/10-anexos/GUIA_NUVEM_FISCAL.md)
-- [Integrações](./docs/08-integracoes/README.md)
 - [Cloudflare Dashboard](https://dash.cloudflare.com)
-- [Nuvem Fiscal](https://app.nuvemfiscal.com.br)
 
 ---
 
@@ -166,10 +173,11 @@ Planac-Revisado/
 
 | Data | Versão | Alterações |
 |------|--------|------------|
+| 06/12/2025 | 5.0 | Correção de métricas (313 regras, 209 casos, 207 tabelas) + 7 integrações documentadas |
 | 06/12/2025 | 4.0 | Varredura completa, IDs Cloudflare, Nuvem Fiscal |
-| 03/12/2024 | 3.0 | Documentação completa |
-| 03/12/2024 | 2.0 | Modelo de dados 180 tabelas |
-| 03/12/2024 | 1.0 | Versão inicial |
+| 03/12/2025 | 3.0 | Documentação completa |
+| 03/12/2025 | 2.0 | Modelo de dados 180 tabelas |
+| 03/12/2025 | 1.0 | Versão inicial |
 
 ---
 
