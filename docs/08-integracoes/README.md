@@ -4,7 +4,7 @@ Documentação completa das integrações externas do sistema.
 
 **Status: ✅ Completo**  
 **Última Atualização:** 07/12/2025  
-**Total de Integrações:** 10
+**Total de Integrações:** 11
 
 ---
 
@@ -21,7 +21,7 @@ Documentação completa das integrações externas do sistema.
 | 7 | [SERPRO Consulta Faturamento](#7-serpro-consulta-faturamento) | Análise Crédito | ✅ Documentado | Baixa |
 | 8 | [IBPT - De Olho no Imposto](#8-ibpt---de-olho-no-imposto) | Tributário | ✅ Documentado | Alta |
 | 9 | [Bluesoft Cosmos](#9-bluesoft-cosmos) | Catálogo Produtos | ✅ Documentado | Alta |
-| 10 | [API Brasil](#10-api-brasil) | Análise Crédito + WhatsApp | ✅ Documentado | Alta |
+| 11 | [API Brasil](#10-api-brasil) | Análise Crédito + WhatsApp | ✅ Documentado | Alta |
 
 ---
 
@@ -1034,7 +1034,7 @@ wrangler secret put APIBRASIL_DEVICE_TOKEN
 
 ---
 
-# 10. API BRASIL
+# 11. API BRASIL
 
 ## 10.1 Visão Geral
 
