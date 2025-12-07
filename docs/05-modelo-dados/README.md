@@ -36,7 +36,7 @@
 | 21. Workflows | 5 | ✅ |
 | 25. Agenda | 4 | ✅ |
 | 26. Central Ajuda | 6 | ✅ |
-| **TOTAL** | **180** | ✅ |
+| **TOTAL** | **207** | ✅ |
 
 ---
 
