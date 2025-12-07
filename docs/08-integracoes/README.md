@@ -4,7 +4,7 @@ Documentação completa das integrações externas do sistema.
 
 **Status: ✅ Completo**  
 **Última Atualização:** 07/12/2025  
-**Total de Integrações:** 9
+**Total de Integrações:** 10
 
 ---
 
@@ -21,6 +21,7 @@ Documentação completa das integrações externas do sistema.
 | 7 | [SERPRO Consulta Faturamento](#7-serpro-consulta-faturamento) | Análise Crédito | ✅ Documentado | Baixa |
 | 8 | [IBPT - De Olho no Imposto](#8-ibpt---de-olho-no-imposto) | Tributário | ✅ Documentado | Alta |
 | 9 | [Bluesoft Cosmos](#9-bluesoft-cosmos) | Catálogo Produtos | ✅ Documentado | Alta |
+| 10 | [API Brasil](#10-api-brasil) | Análise Crédito + WhatsApp | ✅ Documentado | Alta |
 
 ---
 
@@ -1025,7 +1026,533 @@ wrangler secret put IBPT_TOKEN
 
 # Bluesoft Cosmos
 wrangler secret put COSMOS_TOKEN
+
+# API Brasil
+wrangler secret put APIBRASIL_BEARER
+wrangler secret put APIBRASIL_DEVICE_TOKEN
 ```
+
+---
+
+# 10. API BRASIL
+
+## 10.1 Visão Geral
+
+| Item | Descrição |
+|------|-----------|
+| **Fornecedor** | APIBrasil Processamento de Dados LTDA |
+| **Site** | https://apibrasil.com.br |
+| **Documentação** | https://doc.apibrasil.io |
+| **GitHub** | https://github.com/APIBrasil |
+| **Tipo** | API REST |
+| **Autenticação** | Bearer Token + Device Token |
+| **Total de APIs** | +50 serviços disponíveis |
+
+## 10.2 O que é a API Brasil
+
+A **API Brasil** é uma plataforma que centraliza dezenas de APIs brasileiras em um único ambiente. Para o ERP Planac, utilizaremos principalmente:
+
+| Categoria | Serviços | Uso no Planac |
+|-----------|----------|---------------|
+| **Análise de Crédito** | SPC Boa Vista, SCR Bacen, Protesto Nacional, Define Limite | Aprovação de vendas a prazo |
+| **WhatsApp** | API Baileys | Comunicação com clientes, pedidos, notificações |
+
+**Benefício para a Planac:** Análise de crédito automatizada antes de aprovar vendas a prazo + Canal de comunicação via WhatsApp para pedidos, orçamentos e notificações.
+
+## 10.3 Credenciais de Acesso
+
+> ⚠️ **IMPORTANTE:** As credenciais devem ser obtidas na plataforma API Brasil após cadastro.
+
+| Item | Descrição |
+|------|-----------|
+| **Bearer Token** | Token JWT para autenticação (obtido no painel) |
+| **Device Token** | Identificador do dispositivo/conexão |
+| **User-Agent** | `Planac ERP (contato@planac.com.br)` |
+
+## 10.4 Endpoint Base
+
+```
+https://gateway.apibrasil.io/api/v2
+```
+
+---
+
+## 10.5 APIs de Análise de Crédito
+
+### 10.5.1 SPC Boa Vista - R$ 5,00/requisição
+
+Consulta no bureau **Boa Vista SCPC** (Serviço Central de Proteção ao Crédito).
+
+| Informação Retornada | Descrição |
+|---------------------|-----------|
+| **Restrições financeiras** | Dívidas registradas no SPC |
+| **Cheques devolvidos** | Histórico de cheques sem fundo |
+| **Protestos** | Títulos protestados em cartório |
+| **Pendências bancárias** | Pendências com instituições financeiras |
+
+**Quando usar:** Antes de aprovar vendas a prazo para clientes PF ou PJ.
+
+```bash
+curl -X POST "https://gateway.apibrasil.io/api/v2/spc/boavista" \
+  -H "Authorization: Bearer {BEARER_TOKEN}" \
+  -H "DeviceToken: {DEVICE_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cpf_cnpj": "12345678901"
+  }'
+```
+
+**Resposta esperada:**
+```json
+{
+  "status": "success",
+  "data": {
+    "documento": "12345678901",
+    "nome": "JOÃO DA SILVA",
+    "situacao": "REGULAR",
+    "restricoes": [],
+    "cheques_devolvidos": 0,
+    "protestos": 0,
+    "pendencias_bancarias": []
+  }
+}
+```
+
+---
+
+### 10.5.2 SCR Bacen + Score - R$ 6,19/requisição
+
+Consulta ao **Sistema de Informações de Crédito do Banco Central**.
+
+| Informação Retornada | Descrição |
+|---------------------|-----------|
+| **Exposição total de crédito** | Quanto o CPF/CNPJ já deve no sistema financeiro |
+| **Empréstimos ativos** | Empréstimos em bancos |
+| **Financiamentos** | Financiamentos em andamento |
+| **Score de risco** | Pontuação de risco baseada no histórico |
+
+**Quando usar:** Análise mais profunda para vendas de alto valor ou crediário.
+
+```bash
+curl -X POST "https://gateway.apibrasil.io/api/v2/credito/scr-bacen" \
+  -H "Authorization: Bearer {BEARER_TOKEN}" \
+  -H "DeviceToken: {DEVICE_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cpf_cnpj": "12345678901"
+  }'
+```
+
+**Resposta esperada:**
+```json
+{
+  "status": "success",
+  "data": {
+    "documento": "12345678901",
+    "exposicao_total": 45000.00,
+    "emprestimos_ativos": 2,
+    "financiamentos": 1,
+    "score": 720,
+    "rating": "B",
+    "detalhamento": {
+      "credito_pessoal": 15000.00,
+      "financiamento_veiculo": 30000.00
+    }
+  }
+}
+```
+
+---
+
+### 10.5.3 Protesto Nacional - R$ 1,72/requisição
+
+Consulta de **protestos em cartórios de todo Brasil**.
+
+| Informação Retornada | Descrição |
+|---------------------|-----------|
+| **Títulos protestados** | Lista de títulos em protesto |
+| **Valores** | Valor de cada título |
+| **Cartórios** | Cartório onde foi protestado |
+| **Data do protesto** | Quando ocorreu o protesto |
+
+**Quando usar:** Verificação rápida e barata de protestos antes de qualquer venda a prazo.
+
+```bash
+curl -X POST "https://gateway.apibrasil.io/api/v2/credito/protestos" \
+  -H "Authorization: Bearer {BEARER_TOKEN}" \
+  -H "DeviceToken: {DEVICE_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cpf_cnpj": "12345678901"
+  }'
+```
+
+**Resposta esperada:**
+```json
+{
+  "status": "success",
+  "data": {
+    "documento": "12345678901",
+    "total_protestos": 0,
+    "valor_total": 0.00,
+    "protestos": []
+  }
+}
+```
+
+---
+
+### 10.5.4 Define Limite PJ Plus - R$ 12,39/requisição
+
+Versão expandida para **análise de crédito de empresas (PJ)**.
+
+| Informação Retornada | Descrição |
+|---------------------|-----------|
+| **Limite sugerido** | Valor máximo recomendado para crédito |
+| **Análise profunda** | Múltiplas variáveis consideradas |
+| **Rating** | Classificação de risco |
+| **Faturamento estimado** | Estimativa de faturamento da empresa |
+
+**Quando usar:** Análise completa para vendas B2B de alto valor ou abertura de crediário para empresas.
+
+```bash
+curl -X POST "https://gateway.apibrasil.io/api/v2/credito/define-limite-pj-plus" \
+  -H "Authorization: Bearer {BEARER_TOKEN}" \
+  -H "DeviceToken: {DEVICE_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cnpj": "12345678000199"
+  }'
+```
+
+**Resposta esperada:**
+```json
+{
+  "status": "success",
+  "data": {
+    "cnpj": "12345678000199",
+    "razao_social": "EMPRESA EXEMPLO LTDA",
+    "limite_sugerido": 50000.00,
+    "rating": "A",
+    "faturamento_estimado": 500000.00,
+    "tempo_atividade_anos": 8,
+    "score": 850,
+    "analise": {
+      "situacao_cadastral": "ATIVA",
+      "protestos": 0,
+      "acoes_judiciais": 0,
+      "socios_restricao": false
+    }
+  }
+}
+```
+
+---
+
+## 10.6 API WhatsApp Baileys - R$ 9,90/conexão
+
+### 10.6.1 O que é o Baileys
+
+O **Baileys** é uma biblioteca que conecta ao WhatsApp Web diretamente via WebSocket, sem precisar de navegador ou Selenium. Indicado para:
+
+| Característica | Descrição |
+|---------------|-----------|
+| **Conexões de longo prazo** | Mantém conexão estável por longos períodos |
+| **Automações 24/7** | Ideal para bots que precisam ficar sempre online |
+| **Menor custo** | R$ 9,90/conexão (mais barato que outras soluções) |
+| **Mais leve** | Não usa navegador, consome menos recursos |
+
+### 10.6.2 Funcionalidades Disponíveis
+
+| Função | Descrição | Uso no Planac |
+|--------|-----------|---------------|
+| `sendText` | Enviar mensagem de texto | Notificações, confirmações |
+| `sendImage` | Enviar imagem | Fotos de produtos, comprovantes |
+| `sendDocument` | Enviar documento | PDFs de orçamentos, NF-e |
+| `sendAudio` | Enviar áudio | Mensagens de voz |
+| `sendVideo` | Enviar vídeo | Tutoriais, demonstrações |
+| `sendContact` | Enviar contato | Compartilhar contatos |
+| `sendLocation` | Enviar localização | Endereço de entrega |
+| `getChats` | Listar conversas | Histórico de atendimentos |
+| `getMessages` | Buscar mensagens | Buscar pedidos anteriores |
+
+### 10.6.3 Endpoints WhatsApp Baileys
+
+**Enviar mensagem de texto:**
+```bash
+curl -X POST "https://gateway.apibrasil.io/api/v2/whatsapp/sendText" \
+  -H "Authorization: Bearer {BEARER_TOKEN}" \
+  -H "DeviceToken: {DEVICE_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": "5541999999999",
+    "text": "Olá! Seu pedido #12345 foi confirmado. Previsão de entrega: 10/12/2025."
+  }'
+```
+
+**Enviar documento (PDF do orçamento):**
+```bash
+curl -X POST "https://gateway.apibrasil.io/api/v2/whatsapp/sendDocument" \
+  -H "Authorization: Bearer {BEARER_TOKEN}" \
+  -H "DeviceToken: {DEVICE_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": "5541999999999",
+    "document": "https://planac.com.br/orcamentos/12345.pdf",
+    "fileName": "Orcamento_12345.pdf",
+    "caption": "Segue o orçamento solicitado. Válido por 7 dias."
+  }'
+```
+
+**Enviar imagem (foto de produto):**
+```bash
+curl -X POST "https://gateway.apibrasil.io/api/v2/whatsapp/sendImage" \
+  -H "Authorization: Bearer {BEARER_TOKEN}" \
+  -H "DeviceToken: {DEVICE_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "number": "5541999999999",
+    "image": "https://planac.com.br/produtos/placa-gesso.jpg",
+    "caption": "Placa de Gesso Standard 1200x1800x12,5mm - R$ 45,90"
+  }'
+```
+
+---
+
+## 10.7 Tabela de Preços - Análise de Crédito
+
+| API | Preço/Requisição | Uso Recomendado |
+|-----|------------------|-----------------|
+| **Protesto Nacional** | R$ 1,72 | Verificação rápida (sempre usar) |
+| **SPC Boa Vista** | R$ 5,00 | Vendas a prazo PF/PJ |
+| **SCR Bacen + Score** | R$ 6,19 | Vendas de alto valor |
+| **Define Limite PJ Plus** | R$ 12,39 | Abertura de crediário B2B |
+
+### 10.7.1 Estratégia de Consulta Recomendada
+
+```mermaid
+graph TD
+    A[Cliente solicita venda a prazo] --> B{Valor da venda}
+    B -->|Até R$ 500| C[Consulta Protesto Nacional - R$ 1,72]
+    B -->|R$ 500 a R$ 5.000| D[Protesto + SPC Boa Vista - R$ 6,72]
+    B -->|Acima de R$ 5.000| E[Protesto + SPC + SCR Bacen - R$ 12,91]
+    B -->|Crediário PJ| F[Define Limite PJ Plus - R$ 12,39]
+    C --> G{Tem protesto?}
+    D --> H{Tem restrição?}
+    E --> I{Score aceitável?}
+    F --> J{Limite OK?}
+    G -->|Não| K[✅ Aprovar]
+    G -->|Sim| L[❌ Negar ou solicitar garantia]
+    H -->|Não| K
+    H -->|Sim| L
+    I -->|Sim| K
+    I -->|Não| L
+    J -->|Sim| K
+    J -->|Não| L
+```
+
+---
+
+## 10.8 Fluxos de Uso no Planac
+
+### 10.8.1 Fluxo de Aprovação de Crédito
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   APROVAÇÃO DE VENDA A PRAZO                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1. Vendedor cadastra pedido a prazo                            │
+│                    ↓                                            │
+│  2. Sistema verifica valor do pedido                            │
+│                    ↓                                            │
+│  3. Sistema consulta APIs conforme valor:                       │
+│     • Até R$ 500 → Protesto Nacional                            │
+│     • R$ 500-5.000 → Protesto + SPC                             │
+│     • > R$ 5.000 → Protesto + SPC + SCR                         │
+│     • Crediário PJ → Define Limite PJ Plus                      │
+│                    ↓                                            │
+│  4. Sistema analisa resultado automaticamente                   │
+│                    ↓                                            │
+│  ┌─────────────────┴─────────────────┐                         │
+│  │                                    │                         │
+│  ↓                                    ↓                         │
+│  ✅ APROVADO                          ❌ REPROVADO              │
+│  • Sem restrições                     • Protestos               │
+│  • Score aceitável                    • Restrições SPC          │
+│  • Limite OK                          • Score baixo             │
+│                                                                  │
+│  → Pedido segue para                  → Vendedor notificado     │
+│    faturamento                        → Opção: venda à vista    │
+│                                       → Opção: solicitar        │
+│                                         garantia/entrada        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 10.8.2 Fluxo WhatsApp - Confirmação de Pedido
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   NOTIFICAÇÃO VIA WHATSAPP                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1. Pedido confirmado no sistema                                │
+│                    ↓                                            │
+│  2. Sistema envia WhatsApp automático:                          │
+│                                                                  │
+│     ┌─────────────────────────────────────────────────────┐     │
+│     │ 📦 PLANAC - Confirmação de Pedido                   │     │
+│     │                                                      │     │
+│     │ Olá João!                                           │     │
+│     │                                                      │     │
+│     │ Seu pedido #12345 foi confirmado!                   │     │
+│     │                                                      │     │
+│     │ 📋 Itens:                                           │     │
+│     │ • 50x Placa Gesso Standard                          │     │
+│     │ • 100x Perfil Montante                              │     │
+│     │                                                      │     │
+│     │ 💰 Total: R$ 2.450,00                               │     │
+│     │ 🚚 Previsão: 10/12/2025                             │     │
+│     │                                                      │     │
+│     │ Acompanhe: planac.com.br/pedido/12345               │     │
+│     └─────────────────────────────────────────────────────┘     │
+│                    ↓                                            │
+│  3. NF-e emitida → Sistema envia PDF da nota                    │
+│                    ↓                                            │
+│  4. Mercadoria saiu → Sistema envia rastreamento                │
+│                    ↓                                            │
+│  5. Entrega realizada → Sistema envia pesquisa NPS              │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 10.9 Configuração no Cloudflare Workers
+
+### 10.9.1 Variáveis de Ambiente
+
+```typescript
+// wrangler.toml
+[vars]
+APIBRASIL_BASE_URL = "https://gateway.apibrasil.io/api/v2"
+
+// Secrets (via wrangler secret put)
+// APIBRASIL_BEARER
+// APIBRASIL_DEVICE_TOKEN
+```
+
+### 10.9.2 Serviço de Análise de Crédito
+
+```typescript
+// src/services/credit-analysis.ts
+
+interface CreditAnalysisResult {
+  aprovado: boolean;
+  score?: number;
+  limiteMaximo?: number;
+  restricoes: string[];
+  custoConsulta: number;
+}
+
+export async function analisarCredito(
+  cpfCnpj: string, 
+  valorVenda: number
+): Promise<CreditAnalysisResult> {
+  const env = getEnv();
+  const headers = {
+    'Authorization': `Bearer ${env.APIBRASIL_BEARER}`,
+    'DeviceToken': env.APIBRASIL_DEVICE_TOKEN,
+    'Content-Type': 'application/json'
+  };
+
+  // Estratégia baseada no valor
+  let custoTotal = 0;
+  const restricoes: string[] = [];
+
+  // 1. Sempre consultar protestos (mais barato)
+  const protestos = await fetch(`${env.APIBRASIL_BASE_URL}/credito/protestos`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ cpf_cnpj: cpfCnpj })
+  }).then(r => r.json());
+  
+  custoTotal += 1.72;
+
+  if (protestos.data.total_protestos > 0) {
+    restricoes.push(`${protestos.data.total_protestos} protesto(s) - R$ ${protestos.data.valor_total}`);
+  }
+
+  // 2. Para valores maiores, consultar SPC
+  if (valorVenda > 500) {
+    const spc = await fetch(`${env.APIBRASIL_BASE_URL}/spc/boavista`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ cpf_cnpj: cpfCnpj })
+    }).then(r => r.json());
+    
+    custoTotal += 5.00;
+
+    if (spc.data.restricoes?.length > 0) {
+      restricoes.push(...spc.data.restricoes.map(r => r.descricao));
+    }
+  }
+
+  // 3. Para valores altos, consultar SCR Bacen
+  let score = null;
+  if (valorVenda > 5000) {
+    const scr = await fetch(`${env.APIBRASIL_BASE_URL}/credito/scr-bacen`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ cpf_cnpj: cpfCnpj })
+    }).then(r => r.json());
+    
+    custoTotal += 6.19;
+    score = scr.data.score;
+
+    if (scr.data.score < 500) {
+      restricoes.push(`Score baixo: ${scr.data.score}`);
+    }
+  }
+
+  return {
+    aprovado: restricoes.length === 0,
+    score,
+    restricoes,
+    custoConsulta: custoTotal
+  };
+}
+```
+
+---
+
+## 10.10 Comparativo: API Brasil vs Consultas Diretas
+
+| Aspecto | Consulta Direta (SPC/Serasa) | API Brasil |
+|---------|------------------------------|------------|
+| **Contrato** | Individual com cada bureau | Único |
+| **Integração** | Múltiplas APIs diferentes | Uma API unificada |
+| **Preço** | Varia (geralmente mais caro) | Competitivo |
+| **Burocracia** | Alta (contrato por bureau) | Baixa |
+| **Tempo de setup** | Semanas | Minutos |
+| **WhatsApp incluso** | Não | Sim |
+| **Suporte** | Separado por fornecedor | Unificado |
+
+---
+
+## 10.11 Recomendação de Uso
+
+### Para a Planac (Distribuidora B2B):
+
+| Cenário | APIs Recomendadas | Custo |
+|---------|-------------------|-------|
+| **Venda rápida à vista** | Nenhuma | R$ 0 |
+| **Venda a prazo < R$ 500** | Protesto Nacional | R$ 1,72 |
+| **Venda a prazo R$ 500-5.000** | Protesto + SPC | R$ 6,72 |
+| **Venda a prazo > R$ 5.000** | Protesto + SPC + SCR | R$ 12,91 |
+| **Abertura crediário PJ** | Define Limite PJ Plus | R$ 12,39 |
+| **Comunicação cliente** | WhatsApp Baileys | R$ 9,90/mês |
 
 ---
 
@@ -1033,6 +1560,8 @@ wrangler secret put COSMOS_TOKEN
 
 | Data | Alteração |
 |------|-----------|
+| 07/12/2025 | Adicionada integração #10: API Brasil (Análise de Crédito + WhatsApp Baileys) |
+| 07/12/2025 | Expandida documentação Cosmos com todas as formas de busca |
 | 07/12/2025 | Adicionada integração #9: Bluesoft Cosmos (Auto Cadastro de Produtos) |
 | 07/12/2025 | Adicionada integração #8: IBPT - De Olho no Imposto |
 | 06/12/2025 | Adicionadas 6 novas integrações (Baselinker, CPF.CNPJ, CNPJá, SERPRO x3) |
