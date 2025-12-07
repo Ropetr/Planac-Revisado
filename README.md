@@ -1,7 +1,7 @@
 # 🏢 ERP PLANAC - Sistema de Gestão Empresarial
 
 [![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow)]()
-[![Versão](https://img.shields.io/badge/Versão-3.0-blue)]()
+[![Versão](https://img.shields.io/badge/Versão-5.0-blue)]()
 [![Documentação](https://img.shields.io/badge/Docs-28%20Capítulos-green)]()
 
 ---
@@ -21,13 +21,13 @@ Sistema ERP completo, multi-empresas, multi-integrações, desenvolvido em módu
 📁 Planac/
 ├── 📁 docs/                          # Documentação completa
 │   ├── 📁 01-sumario/                # Estrutura de módulos (28 capítulos)
-│   ├── 📁 02-regras-negocio/         # 295 regras por módulo
-│   ├── 📁 03-casos-uso/              # 145 casos de uso
+│   ├── 📁 02-regras-negocio/         # 313 regras por módulo
+│   ├── 📁 03-casos-uso/              # 185 casos de uso
 │   ├── 📁 04-fluxogramas/            # 25 fluxogramas em Mermaid
-│   ├── 📁 05-modelo-dados/           # Estrutura do banco
-│   ├── 📁 06-especificacao-telas/    # Campos e validações
+│   ├── 📁 05-modelo-dados/           # 207 tabelas
+│   ├── 📁 06-especificacao-telas/    # 203 telas especificadas
 │   ├── 📁 07-apis/                   # Endpoints e integrações
-│   ├── 📁 08-integracoes/            # Sistemas externos
+│   ├── 📁 08-integracoes/            # 10 sistemas externos
 │   ├── 📁 09-manuais/                # Usuário e Admin
 │   └── 📁 10-anexos/                 # Arquitetura, Glossário, Roadmap
 ├── 📁 src/                           # Código-fonte (futuro)
@@ -83,9 +83,12 @@ Sistema ERP completo, multi-empresas, multi-integrações, desenvolvido em módu
 | Documento | Quantidade | Status |
 |-----------|------------|--------|
 | ✅ Sumário Geral | 28 capítulos | Completo |
-| ✅ Regras de Negócio | 295 regras | Completo |
-| ✅ Casos de Uso | 145 casos | Completo |
+| ✅ Regras de Negócio | 313 regras | Completo |
+| ✅ Casos de Uso | 185 casos | Completo |
 | ✅ Fluxogramas | 25 fluxos | Completo |
+| ✅ Modelo de Dados | 207 tabelas | Completo |
+| ✅ Telas | 203 telas | Completo |
+| ✅ Integrações | 10 APIs | Completo |
 
 **Detalhes:** [CHECKLIST.md](./CHECKLIST.md)
 
@@ -123,6 +126,7 @@ Sistema ERP completo, multi-empresas, multi-integrações, desenvolvido em módu
 
 - **Rodrigo** - Product Owner / PLANAC
 - **Claude AI** - Assistente de Documentação
+- **DEV.com** - Fábrica de Software Virtual
 
 ---
 
@@ -130,6 +134,8 @@ Sistema ERP completo, multi-empresas, multi-integrações, desenvolvido em módu
 
 | Data | Versão | Descrição |
 |------|--------|-----------|
+| 07/12/2025 | 5.0 | Revisão completa: correção de métricas (313 regras, 185 casos, 207 tabelas, 10 integrações) |
+| 06/12/2025 | 4.0 | Varredura completa, IDs Cloudflare, Nuvem Fiscal |
 | 01/12/2025 | 3.0 | Documentação completa: 295 regras, 145 casos de uso, 25 fluxogramas |
 | 29/11/2025 | 2.1 | Adicionado: E-commerce, RH, GPS, Custos, Contratos |
 | 28/11/2025 | 2.0 | Reorganização: 23 capítulos |
