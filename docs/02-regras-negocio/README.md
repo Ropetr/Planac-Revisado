@@ -12,8 +12,8 @@ Documentação completa das regras de negócio do sistema, organizadas por módu
 |--------|------------|
 | [1. Core (Multi-Empresa)](#1-core-multi-empresa) | 12 |
 | [2. Cadastros Base](#2-cadastros-base) | 25 |
-| [3. Comercial](#3-comercial) | 85 |
-| [4. Compras](#4-compras) | 35 |
+| [3. Comercial](#3-comercial) | 99 |
+| [4. Compras](#4-compras) | 39 |
 | [5. Financeiro](#5-financeiro) | 30 |
 | [6. Fiscal](#6-fiscal) | 20 |
 | [7. Estoque](#7-estoque) | 18 |
@@ -21,7 +21,7 @@ Documentação completa das regras de negócio do sistema, organizadas por módu
 | [9. E-commerce](#9-e-commerce) | 25 |
 | [10. RH](#10-rh) | 20 |
 | [11. Contratos](#11-contratos) | 10 |
-| **TOTAL** | **295** |
+| **TOTAL** | **313** |
 
 ---
 
