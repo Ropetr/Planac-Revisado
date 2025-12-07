@@ -4,7 +4,7 @@ Documentação completa das integrações externas do sistema.
 
 **Status: ✅ Completo**  
 **Última Atualização:** 07/12/2025  
-**Total de Integrações:** 8
+**Total de Integrações:** 9
 
 ---
 
@@ -20,6 +20,7 @@ Documentação completa das integrações externas do sistema.
 | 6 | [SERPRO Consulta Renda](#6-serpro-consulta-renda) | Análise Crédito | ✅ Documentado | Baixa |
 | 7 | [SERPRO Consulta Faturamento](#7-serpro-consulta-faturamento) | Análise Crédito | ✅ Documentado | Baixa |
 | 8 | [IBPT - De Olho no Imposto](#8-ibpt---de-olho-no-imposto) | Tributário | ✅ Documentado | Alta |
+| 9 | [Bluesoft Cosmos](#9-bluesoft-cosmos) | Catálogo Produtos | ✅ Documentado | Alta |
 
 ---
 
@@ -604,9 +605,221 @@ Onde:
 
 ---
 
-# 9. CONFIGURAÇÃO NO CLOUDFLARE
+# 9. BLUESOFT COSMOS
 
-## 9.1 Variáveis de Ambiente (.env)
+## 9.1 Visão Geral
+
+| Item | Descrição |
+|------|-----------|
+| **Fornecedor** | Bluesoft |
+| **Site** | https://cosmos.bluesoft.com.br |
+| **Documentação** | https://cosmos.bluesoft.com.br/api |
+| **Tipo** | API REST |
+| **Autenticação** | Token no Header |
+| **Base de Dados** | +26 milhões de produtos cadastrados |
+
+## 9.2 O que é o Cosmos
+
+O **Bluesoft Cosmos** é o maior catálogo de produtos online do Brasil. Permite que sistemas ERP realizem o **cadastro automático de produtos** apenas informando o código de barras (GTIN/EAN).
+
+**Benefício para a Planac:** Usuário escaneia/digita o código de barras → Sistema preenche automaticamente descrição, NCM, CEST, marca, peso, foto → Elimina erros de digitação e acelera o cadastro.
+
+## 9.3 Credenciais de Acesso
+
+| Item | Valor |
+|------|-------|
+| **Token** | `mK7UKgCycAPW1Nr_7QDkdw` |
+| **Header** | `X-Cosmos-Token` |
+| **User-Agent** | Obrigatório (ex: `Planac ERP (planac@email.com)`) |
+
+> ⚠️ **IMPORTANTE:** A API exige que o header `User-Agent` contenha informações de contato do desenvolvedor.
+
+## 9.4 Endpoint Base
+
+```
+https://api.cosmos.bluesoft.com.br
+```
+
+## 9.5 Endpoints Disponíveis
+
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/gtins/{gtin}` | GET | Busca produto por código de barras |
+| `/gtins/{gtin}.json` | GET | Busca produto (resposta em JSON) |
+| `/products` | GET | Busca por descrição (`?query=termo`) |
+| `/ncms/{ncm}` | GET | Busca NCM específico |
+| `/ncms/{ncm}/products` | GET | Lista produtos de um NCM |
+
+## 9.6 Exemplo de Requisição
+
+```bash
+# Busca produto pelo código de barras (GTIN/EAN)
+curl "https://api.cosmos.bluesoft.com.br/gtins/7891000315507.json" \
+  -H "X-Cosmos-Token: mK7UKgCycAPW1Nr_7QDkdw" \
+  -H "User-Agent: Planac ERP (contato@planac.com.br)"
+```
+
+## 9.7 Resposta da API
+
+```json
+{
+  "gtin": 7891000315507,
+  "description": "LEITE CONDENSADO MOÇA LATA 395G",
+  "brand": {
+    "name": "MOÇA",
+    "picture": "https://cdn.cosmos..."
+  },
+  "gpc": {
+    "code": "10000043",
+    "description": "Leite Condensado/Evaporado (Perecível)"
+  },
+  "ncm": {
+    "code": "04029900",
+    "description": "Outros",
+    "full_description": "Leite e creme de leite, concentrados..."
+  },
+  "cest": {
+    "code": "1700700",
+    "description": "Leite condensado..."
+  },
+  "gross_weight": 0.41,
+  "net_weight": 0.395,
+  "avg_price": 8.99,
+  "max_price": 12.99,
+  "min_price": 6.49,
+  "thumbnail": "https://cdn.cosmos.bluesoft.com.br/products/...",
+  "created_at": "2015-01-15T10:30:00-03:00",
+  "updated_at": "2025-11-20T14:22:00-03:00"
+}
+```
+
+## 9.8 Dados Retornados e Uso no Planac
+
+| Campo API | Descrição | Campo no Planac |
+|-----------|-----------|-----------------|
+| `gtin` | Código de barras EAN/GTIN | `produto.codigo_barras` |
+| `description` | Nome/descrição do produto | `produto.descricao` |
+| `brand.name` | Marca/fabricante | `produto.marca` |
+| `ncm.code` | Código NCM (8 dígitos) | `produto.ncm` |
+| `ncm.description` | Descrição do NCM | `produto.ncm_descricao` |
+| `cest.code` | Código CEST | `produto.cest` |
+| `gross_weight` | Peso bruto (kg) | `produto.peso_bruto` |
+| `net_weight` | Peso líquido (kg) | `produto.peso_liquido` |
+| `avg_price` | Preço médio de mercado | Referência para precificação |
+| `thumbnail` | URL da foto do produto | `produto.foto_url` |
+| `gpc.description` | Categoria mercadológica | `produto.categoria` |
+
+## 9.9 Busca por Descrição
+
+```bash
+# Busca produtos por termo
+curl "https://api.cosmos.bluesoft.com.br/products?query=drywall" \
+  -H "X-Cosmos-Token: mK7UKgCycAPW1Nr_7QDkdw" \
+  -H "User-Agent: Planac ERP (contato@planac.com.br)"
+```
+
+## 9.10 Fluxo de Auto Cadastro
+
+```mermaid
+graph TD
+    A[Usuário digita/escaneia código de barras] --> B[Sistema consulta Cosmos]
+    B --> C{Produto encontrado?}
+    C -->|Sim| D[Preenche campos automaticamente]
+    C -->|Não| E[Exibe formulário em branco]
+    D --> F[Usuário complementa dados específicos]
+    F --> G[Preço de venda]
+    F --> H[Estoque mínimo/máximo]
+    F --> I[Localização no estoque]
+    F --> J[Fornecedor padrão]
+    G --> K[Salva produto]
+    H --> K
+    I --> K
+    J --> K
+    E --> L[Usuário cadastra manualmente]
+    L --> K
+```
+
+## 9.11 Limites do Plano
+
+| Plano | Consultas/mês | Custo |
+|-------|---------------|-------|
+| **Gratuito** | 10 | R$ 0 |
+| **Básico** | 500 | R$ 49/mês |
+| **Profissional** | 5.000 | R$ 149/mês |
+| **Enterprise** | Ilimitado | Sob consulta |
+
+> 💡 **Recomendação:** Implementar cache local (Cloudflare KV) para evitar consultas repetidas do mesmo GTIN.
+
+## 9.12 Estratégia de Cache
+
+```typescript
+// Estrutura de cache no KV
+interface CosmosCache {
+  gtin: string;
+  description: string;
+  brand: string;
+  ncm: string;
+  cest: string;
+  grossWeight: number;
+  netWeight: number;
+  thumbnail: string;
+  avgPrice: number;
+  cachedAt: string;
+  expiresAt: string; // 30 dias após cache
+}
+```
+
+## 9.13 Tratamento de Erros
+
+| Código HTTP | Significado | Ação |
+|-------------|-------------|------|
+| `200` | Sucesso | Usar dados retornados |
+| `401` | Token inválido | Verificar token |
+| `404` | Produto não encontrado | Permitir cadastro manual |
+| `429` | Limite de requisições | Aguardar ou upgrade de plano |
+| `500` | Erro interno | Retry com backoff |
+
+## 9.14 Módulos do Planac que Utilizam
+
+| Módulo | Uso |
+|--------|-----|
+| **Produtos** | Auto cadastro por código de barras |
+| **Compras** | Validação de produtos recebidos |
+| **Inventário** | Conferência de mercadorias |
+| **E-commerce** | Enriquecimento de catálogo com fotos |
+| **Fiscal** | Obtenção automática de NCM e CEST |
+
+## 9.15 Integração com IBPT
+
+O Cosmos retorna o NCM do produto, que pode ser usado para consultar o IBPT:
+
+```
+Cosmos (GTIN) → NCM → IBPT (NCM + UF) → Alíquotas de tributos
+```
+
+Isso permite que ao cadastrar um produto, o sistema já obtenha automaticamente:
+- Dados do produto (Cosmos)
+- Alíquotas tributárias (IBPT)
+
+## 9.16 Produtos de Drywall/Construção
+
+O Cosmos possui boa cobertura de materiais de construção. NCMs comuns para produtos da Planac:
+
+| NCM | Descrição |
+|-----|-----------|
+| `6809.11.00` | Chapas, placas e painéis de gesso |
+| `6809.19.00` | Outras obras de gesso |
+| `7308.90.90` | Outras construções e partes de ferro/aço (perfis) |
+| `7216.61.00` | Perfis em U de ferro/aço |
+| `7019.90.00` | Fibra de vidro (fitas, mantas) |
+| `3214.10.10` | Massas para acabamento |
+| `6806.10.00` | Lã de rocha/vidro (isolamento) |
+
+---
+
+# 10. CONFIGURAÇÃO NO CLOUDFLARE
+
+## 10.1 Variáveis de Ambiente (.env)
 
 ```bash
 # NUVEM FISCAL
@@ -633,9 +846,12 @@ SERPRO_CONTRATO_FATURAMENTO=261077
 
 # IBPT
 IBPT_TOKEN=ePNBuMey5VZ0OCw3ihiQQUAc9EQkKAbN9-TlaoLqAf9rpQVQbgoTMuawhjF_pn_o
+
+# BLUESOFT COSMOS
+COSMOS_TOKEN=mK7UKgCycAPW1Nr_7QDkdw
 ```
 
-## 9.2 Configurar Secrets no Cloudflare
+## 10.2 Configurar Secrets no Cloudflare
 
 ```bash
 # Nuvem Fiscal
@@ -658,6 +874,9 @@ wrangler secret put SERPRO_CONSUMER_SECRET
 
 # IBPT
 wrangler secret put IBPT_TOKEN
+
+# Bluesoft Cosmos
+wrangler secret put COSMOS_TOKEN
 ```
 
 ---
@@ -666,6 +885,7 @@ wrangler secret put IBPT_TOKEN
 
 | Data | Alteração |
 |------|-----------|
+| 07/12/2025 | Adicionada integração #9: Bluesoft Cosmos (Auto Cadastro de Produtos) |
 | 07/12/2025 | Adicionada integração #8: IBPT - De Olho no Imposto |
 | 06/12/2025 | Adicionadas 6 novas integrações (Baselinker, CPF.CNPJ, CNPJá, SERPRO x3) |
 | 06/12/2025 | Documentação inicial Nuvem Fiscal |
