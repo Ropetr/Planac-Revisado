@@ -1,6 +1,8 @@
 # =============================================
 # 🚀 PLANAC ERP - Cloudflare Workers Config
 # =============================================
+# Atualizado em: 09/12/2025
+# IDs reais da infraestrutura Cloudflare
 
 name = "planac-erp-api"
 main = "packages/api/src/index.ts"
@@ -27,7 +29,7 @@ vars = { ENVIRONMENT = "production", NUVEM_FISCAL_URL = "https://api.nuvemfiscal
 [[d1_databases]]
 binding = "DB"
 database_name = "Planac-erp-database"
-database_id = "7d9ff002-0a33-4a10-9677-6c5c654a3a56"
+database_id = "12f9a7d5-fe09-4b09-bf72-59bae24d65b2"
 
 # Migrations
 migrations_dir = "packages/api/migrations"
@@ -37,11 +39,11 @@ migrations_dir = "packages/api/migrations"
 # =============================================
 [[kv_namespaces]]
 binding = "CACHE"
-id = "5b02f88e3de2498db31e9679b4c291e5"
+id = "d053dab81a554dc6961884eae41f75f7"
 
 [[kv_namespaces]]
 binding = "SESSIONS"
-id = "9b9cef95c4f741a6a2ac9de75e4e568c"
+id = "80c6322699844ba1bb99e841f0c84306"
 
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
