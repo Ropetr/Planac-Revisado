@@ -1,0 +1,737 @@
+openapi: 3.0.3
+info:
+  title: ERP PLANAC API
+  description: |
+    API do ERP PLANAC - Sistema de Gestão Empresarial Multi-tenant.
+    
+    ## Autenticação
+    
+    Todas as rotas (exceto `/auth/login`) requerem token JWT no header:
+    ```
+    Authorization: Bearer <token>
+    ```
+    
+    ## Multi-tenancy
+    
+    O token JWT contém `empresa_id` e `filial_id`. Todas as operações
+    são automaticamente filtradas pelo tenant do usuário.
+    
+    ## Versionamento
+    
+    A API segue versionamento semântico. Breaking changes resultam
+    em nova versão major (`/api/v2/...`).
+    
+  version: 1.0.0
+  contact:
+    name: DEV.com
+    email: suporte@dev.com
+  license:
+    name: Proprietário
+    
+servers:
+  - url: https://planac-erp.workers.dev/api/v1
+    description: Produção
+  - url: http://localhost:8787/api/v1
+    description: Desenvolvimento Local
+
+tags:
+  - name: Auth
+    description: Autenticação e sessões
+  - name: Empresas
+    description: Gestão de tenants
+  - name: Usuários
+    description: Gestão de usuários
+  - name: Clientes
+    description: Cadastro de clientes
+  - name: Produtos
+    description: Catálogo de produtos
+  - name: Estoque
+    description: Movimentações e saldos
+  - name: Orçamentos
+    description: Propostas comerciais
+  - name: Pedidos
+    description: Pedidos de venda
+  - name: Fiscal
+    description: Notas fiscais
+
+paths:
+  # ==================== AUTH ====================
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Autenticar usuário
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login bem sucedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Encerrar sessão
+      operationId: logout
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout bem sucedido
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Dados do usuário logado
+      operationId: getMe
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dados do usuário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+
+  # ==================== CLIENTES ====================
+  /clientes:
+    get:
+      tags: [Clientes]
+      summary: Listar clientes
+      operationId: listClientes
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/SearchParam'
+      responses:
+        '200':
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClienteListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+          
+    post:
+      tags: [Clientes]
+      summary: Criar cliente
+      operationId: createCliente
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClienteInput'
+      responses:
+        '201':
+          description: Cliente criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /clientes/{id}:
+    get:
+      tags: [Clientes]
+      summary: Buscar cliente por ID
+      operationId: getCliente
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Cliente encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Clientes]
+      summary: Atualizar cliente
+      operationId: updateCliente
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClienteInput'
+      responses:
+        '200':
+          description: Cliente atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+
+    delete:
+      tags: [Clientes]
+      summary: Remover cliente
+      operationId: deleteCliente
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '204':
+          description: Cliente removido
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== PRODUTOS ====================
+  /produtos:
+    get:
+      tags: [Produtos]
+      summary: Listar produtos
+      operationId: listProdutos
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/SearchParam'
+        - name: categoria_id
+          in: query
+          schema:
+            type: string
+        - name: ativo
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdutoListResponse'
+
+    post:
+      tags: [Produtos]
+      summary: Criar produto
+      operationId: createProduto
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProdutoInput'
+      responses:
+        '201':
+          description: Produto criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+
+  # ==================== ORÇAMENTOS ====================
+  /orcamentos:
+    get:
+      tags: [Orçamentos]
+      summary: Listar orçamentos
+      operationId: listOrcamentos
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: cliente_id
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [rascunho, enviado, aprovado, rejeitado, convertido, expirado]
+      responses:
+        '200':
+          description: Lista de orçamentos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrcamentoListResponse'
+
+    post:
+      tags: [Orçamentos]
+      summary: Criar orçamento
+      operationId: createOrcamento
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrcamentoInput'
+      responses:
+        '201':
+          description: Orçamento criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Orcamento'
+
+  /orcamentos/{id}/converter:
+    post:
+      tags: [Orçamentos]
+      summary: Converter orçamento em pedido
+      operationId: converterOrcamento
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '201':
+          description: Pedido criado a partir do orçamento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+
+  # ==================== PEDIDOS ====================
+  /pedidos:
+    get:
+      tags: [Pedidos]
+      summary: Listar pedidos
+      operationId: listPedidos
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: cliente_id
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pendente, aprovado, separando, faturado, em_entrega, entregue, cancelado]
+      responses:
+        '200':
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PedidoListResponse'
+
+  # ==================== HEALTH ====================
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: API funcionando
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  version:
+                    type: string
+                    example: 1.0.0
+                  timestamp:
+                    type: string
+                    format: date-time
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    SearchParam:
+      name: search
+      in: query
+      schema:
+        type: string
+
+  responses:
+    BadRequest:
+      description: Requisição inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Não autenticado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Sem permissão
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Recurso não encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+
+    # Auth
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - senha
+      properties:
+        email:
+          type: string
+          format: email
+        senha:
+          type: string
+          format: password
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        usuario:
+          $ref: '#/components/schemas/Usuario'
+        expires_at:
+          type: string
+          format: date-time
+
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: string
+        empresa_id:
+          type: string
+        filial_id:
+          type: string
+        nome:
+          type: string
+        email:
+          type: string
+        perfil:
+          type: object
+          properties:
+            id:
+              type: string
+            nome:
+              type: string
+
+    # Cliente
+    Cliente:
+      type: object
+      properties:
+        id:
+          type: string
+        empresa_id:
+          type: string
+        tipo_pessoa:
+          type: string
+          enum: [PF, PJ]
+        cpf_cnpj:
+          type: string
+        nome:
+          type: string
+        razao_social:
+          type: string
+        email:
+          type: string
+        telefone:
+          type: string
+        ativo:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ClienteInput:
+      type: object
+      required:
+        - tipo_pessoa
+        - cpf_cnpj
+        - nome
+      properties:
+        tipo_pessoa:
+          type: string
+          enum: [PF, PJ]
+        cpf_cnpj:
+          type: string
+        nome:
+          type: string
+        razao_social:
+          type: string
+        email:
+          type: string
+          format: email
+        telefone:
+          type: string
+        ativo:
+          type: boolean
+          default: true
+
+    ClienteListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cliente'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Produto
+    Produto:
+      type: object
+      properties:
+        id:
+          type: string
+        empresa_id:
+          type: string
+        codigo:
+          type: string
+        nome:
+          type: string
+        descricao:
+          type: string
+        categoria_id:
+          type: string
+        unidade:
+          type: string
+        preco:
+          type: number
+          format: float
+        estoque_atual:
+          type: number
+        ativo:
+          type: boolean
+
+    ProdutoInput:
+      type: object
+      required:
+        - codigo
+        - nome
+        - unidade
+      properties:
+        codigo:
+          type: string
+        nome:
+          type: string
+        descricao:
+          type: string
+        categoria_id:
+          type: string
+        unidade:
+          type: string
+        preco:
+          type: number
+        ativo:
+          type: boolean
+          default: true
+
+    ProdutoListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Produto'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Orçamento
+    Orcamento:
+      type: object
+      properties:
+        id:
+          type: string
+        numero:
+          type: string
+        cliente_id:
+          type: string
+        vendedor_id:
+          type: string
+        status:
+          type: string
+        valor_total:
+          type: number
+        validade:
+          type: string
+          format: date
+        itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrcamentoItem'
+
+    OrcamentoItem:
+      type: object
+      properties:
+        produto_id:
+          type: string
+        quantidade:
+          type: number
+        valor_unitario:
+          type: number
+        desconto:
+          type: number
+        valor_total:
+          type: number
+
+    OrcamentoInput:
+      type: object
+      required:
+        - cliente_id
+        - itens
+      properties:
+        cliente_id:
+          type: string
+        vendedor_id:
+          type: string
+        validade:
+          type: string
+          format: date
+        observacoes:
+          type: string
+        itens:
+          type: array
+          items:
+            type: object
+            required:
+              - produto_id
+              - quantidade
+            properties:
+              produto_id:
+                type: string
+              quantidade:
+                type: number
+              valor_unitario:
+                type: number
+              desconto:
+                type: number
+
+    OrcamentoListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Orcamento'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Pedido
+    Pedido:
+      type: object
+      properties:
+        id:
+          type: string
+        numero:
+          type: string
+        orcamento_id:
+          type: string
+        cliente_id:
+          type: string
+        status:
+          type: string
+        valor_total:
+          type: number
+
+    PedidoListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pedido'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Comum
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        total_pages:
+          type: integer
