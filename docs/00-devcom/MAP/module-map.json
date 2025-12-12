@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "description": "Mapa de módulos do ERP PLANAC - Onde encontrar documentação por domínio",
+  "updated_at": "2025-12-12T15:00:00Z",
+  
+  "domains": {
+    "core": {
+      "name": "Core / Base",
+      "description": "Estrutura fundamental do sistema",
+      "docs": {
+        "sumario": "docs/01-sumario/README.md#parte-1",
+        "regras": "docs/02-regras-negocio/README.md#core",
+        "casos_uso": "docs/03-casos-uso/README.md#core",
+        "modelo_dados": "docs/05-modelo-dados/README.md#empresas-filiais-usuarios",
+        "telas": "docs/06-especificacao-telas/README.md#core"
+      },
+      "routes": [
+        "auth.routes.ts",
+        "empresas.routes.ts",
+        "filiais.routes.ts",
+        "usuarios.routes.ts",
+        "perfis.routes.ts",
+        "configuracoes.routes.ts"
+      ],
+      "tables": [
+        "empresas",
+        "filiais",
+        "usuarios",
+        "perfis",
+        "permissoes",
+        "perfis_permissoes",
+        "sessoes",
+        "tokens",
+        "logs_acesso"
+      ]
+    },
+    
+    "comercial": {
+      "name": "Comercial / Vendas",
+      "description": "CRM, orçamentos, pedidos, entregas",
+      "docs": {
+        "sumario": "docs/01-sumario/README.md#parte-2",
+        "regras": "docs/02-regras-negocio/README.md#comercial",
+        "casos_uso": "docs/03-casos-uso/README.md#comercial",
+        "fluxogramas": "docs/04-fluxogramas/README.md#comercial",
+        "modelo_dados": "docs/05-modelo-dados/README.md#comercial",
+        "telas": "docs/06-especificacao-telas/README.md#comercial"
+      },
+      "routes": [
+        "clientes.routes.ts",
+        "vendedores.routes.ts",
+        "orcamentos.routes.ts",
+        "pedidos.routes.ts",
+        "entregas.routes.ts",
+        "devolucoes.routes.ts",
+        "trocas.routes.ts",
+        "garantias.routes.ts",
+        "consignacoes.routes.ts",
+        "crm.routes.ts"
+      ],
+      "tables": [
+        "clientes",
+        "clientes_enderecos",
+        "clientes_contatos",
+        "vendedores",
+        "orcamentos",
+        "orcamentos_itens",
+        "pedidos",
+        "pedidos_itens",
+        "pedidos_parcelas",
+        "entregas",
+        "entregas_itens"
+      ]
+    },
+    
+    "produtos_estoque": {
+      "name": "Produtos e Estoque",
+      "description": "Catálogo, inventário, movimentações",
+      "docs": {
+        "sumario": "docs/01-sumario/README.md#parte-3",
+        "regras": "docs/02-regras-negocio/README.md#estoque",
+        "casos_uso": "docs/03-casos-uso/README.md#estoque",
+        "fluxogramas": "docs/04-fluxogramas/README.md#estoque",
+        "modelo_dados": "docs/05-modelo-dados/README.md#produtos-estoque",
+        "telas": "docs/06-especificacao-telas/README.md#produtos"
+      },
+      "routes": [
+        "produtos.routes.ts",
+        "categorias.routes.ts",
+        "marcas.routes.ts",
+        "unidades.routes.ts",
+        "estoque.routes.ts",
+        "locais-estoque.routes.ts",
+        "inventarios.routes.ts",
+        "transferencias.routes.ts"
+      ],
+      "tables": [
+        "produtos",
+        "categorias",
+        "marcas",
+        "unidades",
+        "estoque",
+        "estoque_movimentacoes",
+        "estoque_reservas",
+        "locais_estoque",
+        "inventarios",
+        "inventarios_itens",
+        "transferencias",
+        "transferencias_itens"
+      ]
+    },
+    
+    "compras": {
+      "name": "Compras / Procurement",
+      "description": "Cotações, pedidos de compra, fornecedores",
+      "docs": {
+        "sumario": "docs/01-sumario/README.md#parte-3",
+        "regras": "docs/02-regras-negocio/README.md#compras",
+        "casos_uso": "docs/03-casos-uso/README.md#compras",
+        "modelo_dados": "docs/05-modelo-dados/README.md#compras"
+      },
+      "routes": [
+        "fornecedores.routes.ts",
+        "compras.routes.ts"
+      ],
+      "tables": [
+        "fornecedores",
+        "fornecedores_contatos",
+        "requisicoes_compra",
+        "cotacoes",
+        "cotacoes_itens",
+        "pedidos_compra",
+        "pedidos_compra_itens"
+      ]
+    },
+    
+    "financeiro": {
+      "name": "Financeiro",
+      "description": "Contas a pagar/receber, bancos, caixa",
+      "docs": {
+        "sumario": "docs/01-sumario/README.md#parte-4",
+        "regras": "docs/02-regras-negocio/README.md#financeiro",
+        "casos_uso": "docs/03-casos-uso/README.md#financeiro",
+        "fluxogramas": "docs/04-fluxogramas/README.md#financeiro",
+        "modelo_dados": "docs/05-modelo-dados/README.md#financeiro",
+        "telas": "docs/06-especificacao-telas/README.md#financeiro"
+      },
+      "routes": [
+        "contas-receber.routes.ts",
+        "contas-pagar.routes.ts",
+        "bancos.routes.ts",
+        "caixas.routes.ts"
+      ],
+      "tables": [
+        "contas_receber",
+        "recebimentos",
+        "contas_pagar",
+        "pagamentos",
+        "bancos",
+        "contas_bancarias",
+        "movimentacoes_bancarias",
+        "conciliacao",
+        "caixas",
+        "caixas_movimentacoes"
+      ]
+    },
+    
+    "fiscal": {
+      "name": "Fiscal / Tributário",
+      "description": "NF-e, NFC-e, NFS-e, impostos",
+      "docs": {
+        "sumario": "docs/01-sumario/README.md#parte-5",
+        "regras": "docs/02-regras-negocio/README.md#fiscal",
+        "casos_uso": "docs/03-casos-uso/README.md#fiscal",
+        "fluxogramas": "docs/04-fluxogramas/README.md#fiscal",
+        "modelo_dados": "docs/05-modelo-dados/README.md#fiscal",
+        "integracoes": "docs/08-integracoes/nuvemfiscal-api/"
+      },
+      "routes": [
+        "notas-fiscais.routes.ts"
+      ],
+      "tables": [
+        "notas_fiscais",
+        "nfe_itens",
+        "nfe_pagamentos",
+        "nfe_duplicatas",
+        "nfe_volumes",
+        "nfe_eventos",
+        "manifestacao",
+        "icms_por_uf",
+        "icms_st_por_uf",
+        "cfop_operacoes",
+        "ncm",
+        "cest"
+      ]
+    },
+    
+    "logistica": {
+      "name": "Logística / Transporte",
+      "description": "Transportadoras, rotas, rastreamento",
+      "docs": {
+        "sumario": "docs/01-sumario/README.md#parte-6",
+        "regras": "docs/02-regras-negocio/README.md#logistica",
+        "casos_uso": "docs/03-casos-uso/README.md#logistica",
+        "modelo_dados": "docs/05-modelo-dados/README.md#logistica"
+      },
+      "routes": [
+        "transportadoras.routes.ts",
+        "motoristas.routes.ts",
+        "veiculos.routes.ts",
+        "rotas.routes.ts",
+        "rastreamento.routes.ts",
+        "ocorrencias.routes.ts"
+      ],
+      "tables": [
+        "transportadoras",
+        "transportadoras_veiculos",
+        "transportadoras_regioes",
+        "motoristas",
+        "veiculos",
+        "rotas",
+        "rotas_entregas",
+        "rastreamento",
+        "ocorrencias"
+      ]
+    },
+    
+    "precificacao": {
+      "name": "Precificação",
+      "description": "Tabelas de preço, condições, promoções",
+      "docs": {
+        "regras": "docs/02-regras-negocio/README.md#precificacao",
+        "modelo_dados": "docs/05-modelo-dados/README.md#precificacao"
+      },
+      "routes": [
+        "tabelas-preco.routes.ts",
+        "condicoes-pagamento.routes.ts",
+        "comissoes.routes.ts"
+      ],
+      "tables": [
+        "tabelas_preco",
+        "tabelas_preco_itens",
+        "condicoes_pagamento",
+        "condicoes_parcelas",
+        "formas_pagamento",
+        "promocoes",
+        "regras_comissao"
+      ]
+    },
+    
+    "integracoes": {
+      "name": "Integrações Externas",
+      "description": "APIs de terceiros",
+      "docs": {
+        "integracoes": "docs/08-integracoes/",
+        "adr": "docs/00-devcom/ADR/ADR-0003-integracoes-e-provedores.md"
+      },
+      "routes": [],
+      "providers": [
+        "nuvem_fiscal",
+        "tecnospeed",
+        "plug4market",
+        "whatsapp_bsp",
+        "cpf_cnpj",
+        "cnpja",
+        "serpro",
+        "ibpt",
+        "bluesoft_cosmos"
+      ]
+    }
+  },
+  
+  "quick_reference": {
+    "regras_negocio": {
+      "total": 313,
+      "path": "docs/02-regras-negocio/"
+    },
+    "casos_uso": {
+      "total": 185,
+      "path": "docs/03-casos-uso/"
+    },
+    "fluxogramas": {
+      "total": 25,
+      "path": "docs/04-fluxogramas/"
+    },
+    "tabelas": {
+      "total": 207,
+      "path": "docs/05-modelo-dados/"
+    },
+    "telas": {
+      "total": 203,
+      "path": "docs/06-especificacao-telas/"
+    },
+    "integracoes": {
+      "total": 10,
+      "path": "docs/08-integracoes/"
+    }
+  }
+}

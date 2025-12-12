@@ -1,0 +1,295 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "description": "Mapa de impacto - Regras de roteamento para especialistas DEV.com",
+  "updated_at": "2025-12-12T15:00:00Z",
+  
+  "routing_rules": {
+    "database_change": {
+      "triggers": [
+        "CREATE TABLE",
+        "ALTER TABLE",
+        "DROP TABLE",
+        "CREATE INDEX",
+        "migrations/",
+        "model-dados"
+      ],
+      "specialists": {
+        "required": ["DBA", "Segurança/LGPD", "QA Técnico"],
+        "optional": ["CTO", "Backend"]
+      },
+      "checklist": [
+        "Migration reversível (up/down)?",
+        "Índices para queries frequentes?",
+        "empresa_id presente em tabelas de dados?",
+        "Dados sensíveis criptografados?",
+        "Impacto em queries existentes?"
+      ]
+    },
+    
+    "fiscal_change": {
+      "triggers": [
+        "NF-e",
+        "NFC-e",
+        "NFS-e",
+        "CT-e",
+        "MDF-e",
+        "CFOP",
+        "CST",
+        "ICMS",
+        "PIS",
+        "COFINS",
+        "IPI",
+        "nuvemfiscal",
+        "notas-fiscais"
+      ],
+      "specialists": {
+        "required": ["Tributário", "Backend", "QA Técnico"],
+        "optional": ["CFO", "CTO"]
+      },
+      "checklist": [
+        "Alíquotas corretas por UF?",
+        "CFOP mapeado corretamente?",
+        "Ambiente sandbox vs produção?",
+        "Regras de ST aplicadas?",
+        "Integração Nuvem Fiscal testada?"
+      ]
+    },
+    
+    "financial_change": {
+      "triggers": [
+        "contas-receber",
+        "contas-pagar",
+        "boleto",
+        "pix",
+        "pagamento",
+        "recebimento",
+        "caixa",
+        "banco",
+        "conciliação",
+        "tecnospeed"
+      ],
+      "specialists": {
+        "required": ["CFO", "Backend", "QA Técnico"],
+        "optional": ["Segurança/LGPD", "DBA"]
+      },
+      "checklist": [
+        "Cálculos de juros/multa corretos?",
+        "Integração bancária testada?",
+        "Conciliação automática funciona?",
+        "Logs de auditoria financeira?",
+        "Limites de crédito respeitados?"
+      ]
+    },
+    
+    "api_contract_change": {
+      "triggers": [
+        "openapi.yaml",
+        ".routes.ts",
+        "endpoint",
+        "request/response",
+        "schema"
+      ],
+      "specialists": {
+        "required": ["Backend", "CTO", "QA Técnico"],
+        "optional": ["Frontend", "Tech Writer"]
+      },
+      "checklist": [
+        "Breaking change? (versionar se sim)",
+        "OpenAPI atualizado?",
+        "Validação Zod implementada?",
+        "Testes de contrato?",
+        "Documentação atualizada?"
+      ]
+    },
+    
+    "auth_security_change": {
+      "triggers": [
+        "auth",
+        "login",
+        "jwt",
+        "token",
+        "permissão",
+        "perfil",
+        "senha",
+        "2fa",
+        "sessão",
+        "lgpd"
+      ],
+      "specialists": {
+        "required": ["Segurança/LGPD", "Backend", "QA Técnico"],
+        "optional": ["CTO", "DBA"]
+      },
+      "checklist": [
+        "Vulnerabilidade de injeção?",
+        "Token expira corretamente?",
+        "Rate limiting aplicado?",
+        "Logs de acesso LGPD?",
+        "Dados sensíveis protegidos?"
+      ]
+    },
+    
+    "frontend_change": {
+      "triggers": [
+        ".tsx",
+        ".jsx",
+        "components/",
+        "pages/",
+        "telas",
+        "ui/",
+        "tailwind"
+      ],
+      "specialists": {
+        "required": ["Frontend", "UX/UI", "QA Técnico"],
+        "optional": ["UX Writer", "Acessibilidade"]
+      },
+      "checklist": [
+        "Responsivo (mobile/desktop)?",
+        "Acessibilidade (WCAG)?",
+        "Loading states?",
+        "Error handling?",
+        "Consistência com Design System?"
+      ]
+    },
+    
+    "integration_change": {
+      "triggers": [
+        "integracoes/",
+        "nuvem_fiscal",
+        "tecnospeed",
+        "plug4market",
+        "whatsapp",
+        "baselinker",
+        "marketplace",
+        "api externa"
+      ],
+      "specialists": {
+        "required": ["Backend", "CTO", "QA Técnico"],
+        "optional": ["Segurança/LGPD", "DevOps"]
+      },
+      "checklist": [
+        "Credenciais em Secrets (não no código)?",
+        "Tratamento de erros da API externa?",
+        "Retry com backoff exponencial?",
+        "Timeout configurado?",
+        "Logs de requisições/respostas?"
+      ]
+    },
+    
+    "estoque_change": {
+      "triggers": [
+        "estoque",
+        "inventário",
+        "movimentação",
+        "reserva",
+        "transferência",
+        "local_estoque",
+        "wms"
+      ],
+      "specialists": {
+        "required": ["Estoque", "Backend", "QA Técnico"],
+        "optional": ["DBA", "Logística"]
+      },
+      "checklist": [
+        "Saldo negativo permitido?",
+        "Reserva libera ao cancelar?",
+        "FIFO/FEFO implementado?",
+        "Auditoria de movimentações?",
+        "Multi-local funcionando?"
+      ]
+    },
+    
+    "comercial_change": {
+      "triggers": [
+        "orçamento",
+        "pedido",
+        "venda",
+        "cliente",
+        "desconto",
+        "tabela_preco",
+        "condição_pagamento"
+      ],
+      "specialists": {
+        "required": ["Vendas", "Backend", "QA Técnico"],
+        "optional": ["Pricing", "CFO", "Frontend"]
+      },
+      "checklist": [
+        "Fluxo orçamento→pedido funciona?",
+        "Descontos respeitam limites?",
+        "Tabela de preço correta?",
+        "Parcelas calculadas certo?",
+        "Comissão registrada?"
+      ]
+    },
+    
+    "infra_devops_change": {
+      "triggers": [
+        "wrangler.toml",
+        "github/workflows",
+        "ci/cd",
+        "deploy",
+        "cloudflare",
+        "d1",
+        "kv",
+        "r2"
+      ],
+      "specialists": {
+        "required": ["DevOps", "CTO", "QA Técnico"],
+        "optional": ["Segurança/LGPD", "GitHub/Cloudflare"]
+      },
+      "checklist": [
+        "Secrets não expostos?",
+        "Rollback possível?",
+        "Testes passando antes do deploy?",
+        "Migrations aplicadas?",
+        "Monitoramento ativo?"
+      ]
+    }
+  },
+  
+  "severity_levels": {
+    "critical": {
+      "description": "Parar tudo, revisar imediatamente",
+      "triggers": ["production", "dados_cliente", "credenciais", "rollback"],
+      "response_time": "imediato"
+    },
+    "high": {
+      "description": "Revisar antes do merge",
+      "triggers": ["database", "api_contract", "auth"],
+      "response_time": "mesmo dia"
+    },
+    "medium": {
+      "description": "Revisar na sprint",
+      "triggers": ["frontend", "docs", "tests"],
+      "response_time": "dentro da sprint"
+    },
+    "low": {
+      "description": "Revisar quando possível",
+      "triggers": ["refactor", "comments", "formatting"],
+      "response_time": "próxima sprint"
+    }
+  },
+  
+  "escalation_path": [
+    {
+      "level": 1,
+      "role": "QA Técnico",
+      "action": "Validar checklist básico"
+    },
+    {
+      "level": 2,
+      "role": "Especialista de Domínio",
+      "action": "Validar regras de negócio"
+    },
+    {
+      "level": 3,
+      "role": "CTO",
+      "action": "Decidir arquitetura/trade-offs"
+    },
+    {
+      "level": 4,
+      "role": "CEO DEV.com",
+      "action": "Decisão estratégica/blocker"
+    }
+  ]
+}
