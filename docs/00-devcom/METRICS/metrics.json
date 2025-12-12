@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "generated_at": "2025-12-12T15:00:00Z",
+  "git": {
+    "hash": "measured-via-api",
+    "branch": "main"
+  },
+  
+  "summary": {
+    "total_docs_folders": 10,
+    "total_route_files": 58,
+    "total_migrations": 8,
+    "total_docs_lines": 14288
+  },
+  
+  "documentation": {
+    "folders": {
+      "01-sumario": {
+        "file_count": 1,
+        "files": ["README.md"]
+      },
+      "02-regras-negocio": {
+        "file_count": 1,
+        "files": ["README.md"]
+      },
+      "03-casos-uso": {
+        "file_count": 1,
+        "files": ["README.md"]
+      },
+      "04-fluxogramas": {
+        "file_count": 1,
+        "files": ["README.md"]
+      },
+      "05-modelo-dados": {
+        "file_count": 1,
+        "files": ["README.md"]
+      },
+      "06-especificacao-telas": {
+        "file_count": 1,
+        "files": ["README.md"]
+      },
+      "07-apis": {
+        "file_count": 1,
+        "files": ["README.md"]
+      },
+      "08-integracoes": {
+        "file_count": 5,
+        "files": [
+          "README.md",
+          "baselinker-api/",
+          "gap-analysis-tabelas.md",
+          "ibpt-api/",
+          "nuvemfiscal-api/"
+        ]
+      },
+      "09-manuais": {
+        "file_count": 1,
+        "files": ["README.md"]
+      },
+      "10-anexos": {
+        "file_count": 3,
+        "files": ["README.md", "SEGURANCA.md", "GUIA_NUVEM_FISCAL.md"]
+      }
+    },
+    "total_files": 16,
+    "estimated_lines": 14288
+  },
+  
+  "source_code": {
+    "api_routes": {
+      "total": 58,
+      "files": [
+        "agenda.routes.ts",
+        "arquivos.routes.ts",
+        "auditoria.routes.ts",
+        "auth.routes.ts",
+        "bancos.routes.ts",
+        "bi.routes.ts",
+        "caixas.routes.ts",
+        "categorias.routes.ts",
+        "clientes.routes.ts",
+        "comissoes.routes.ts",
+        "compras.routes.ts",
+        "condicoes-pagamento.routes.ts",
+        "configuracoes-sistema.routes.ts",
+        "configuracoes.routes.ts",
+        "consignacoes.routes.ts",
+        "contabilidade.routes.ts",
+        "contas-pagar.routes.ts",
+        "contas-receber.routes.ts",
+        "contratos.routes.ts",
+        "crm.routes.ts",
+        "devolucoes.routes.ts",
+        "ecommerce.routes.ts",
+        "empresas.routes.ts",
+        "entregas.routes.ts",
+        "estoque.routes.ts",
+        "filiais.routes.ts",
+        "folha-pagamento.routes.ts",
+        "fornecedores.routes.ts",
+        "garantias.routes.ts",
+        "import-export.routes.ts",
+        "inventarios.routes.ts",
+        "locais-estoque.routes.ts",
+        "marcas.routes.ts",
+        "motoristas.routes.ts",
+        "notas-fiscais.routes.ts",
+        "notificacoes.routes.ts",
+        "ocorrencias.routes.ts",
+        "orcamentos.routes.ts",
+        "ordens-servico.routes.ts",
+        "patrimonio.routes.ts",
+        "pdv.routes.ts",
+        "pedidos.routes.ts",
+        "perfis.routes.ts",
+        "produtos.routes.ts",
+        "rastreamento.routes.ts",
+        "rh.routes.ts",
+        "rotas.routes.ts",
+        "tabelas-preco.routes.ts",
+        "tarefas.routes.ts",
+        "tickets.routes.ts",
+        "transferencias.routes.ts",
+        "transportadoras.routes.ts",
+        "trocas.routes.ts",
+        "unidades.routes.ts",
+        "usuarios.routes.ts",
+        "veiculos.routes.ts",
+        "vendedores.routes.ts",
+        "workflows.routes.ts"
+      ]
+    },
+    "migrations": {
+      "total": 8,
+      "files": [
+        "0001_base.sql",
+        "0002_core_usuarios.sql",
+        "0003_seed_permissoes.sql",
+        "0004_seed_inicial.sql",
+        "0005_cadastros.sql",
+        "0006_estoque.sql",
+        "0007_comercial.sql",
+        "0008_complementos.sql"
+      ]
+    }
+  },
+  
+  "declared_metrics": {
+    "note": "Valores declarados no README (fonte de verdade para negócio)",
+    "regras_negocio": 313,
+    "casos_uso": 185,
+    "fluxogramas": 25,
+    "tabelas_modelo_dados": 207,
+    "telas_especificadas": 203,
+    "integracoes_externas": 10
+  },
+  
+  "cloudflare_resources": {
+    "d1_database": {
+      "name": "Planac-erp-database",
+      "id": "12f9a7d5-fe09-4b09-bf72-59bae24d65b2"
+    },
+    "kv_namespaces": [
+      {
+        "name": "Planac-erp-cache",
+        "id": "d053dab81a554dc6961884eae41f75f7"
+      },
+      {
+        "name": "Planac-erp-sessions",
+        "id": "80c6322699844ba1bb99e841f0c84306"
+      },
+      {
+        "name": "Planac-erp-rate-limit",
+        "id": "f9991a8379d74873a8030e42dad416bd"
+      }
+    ],
+    "r2_bucket": {
+      "name": "planac-erp-storage"
+    }
+  }
+}
