@@ -3,8 +3,8 @@
 <div align="center">
 
 ![Versão](https://img.shields.io/badge/Versão-2.0-blue)
-![Especialistas](https://img.shields.io/badge/Especialistas-44-green)
-![Diretorias](https://img.shields.io/badge/Diretorias-11-orange)
+![Especialistas](https://img.shields.io/badge/Especialistas-57-green)
+![Diretorias](https://img.shields.io/badge/Diretorias-14-orange)
 
 **Uma empresa virtual estruturada para construir sistemas com IA**
 
@@ -19,8 +19,8 @@
 | Seção | Descrição |
 |-------|-----------|
 | [1. O que é a DEV.com](#1-o-que-é-a-devcom) | Conceito e propósito |
-| [2. Estrutura Organizacional](#2-estrutura-organizacional) | 11 Diretorias |
-| [3. Conselho de Especialistas](#3-conselho-de-especialistas) | 44 Especialistas detalhados |
+| [2. Estrutura Organizacional](#2-estrutura-organizacional) | 14 Diretorias |
+| [3. Conselho de Especialistas](#3-conselho-de-especialistas) | 57 Especialistas detalhados |
 | [4. Seu Papel: Cliente Estrategista](#4-seu-papel-cliente-estrategista) | Responsabilidades do dono do projeto |
 | [5. Como Funciona uma Mesa de Especialistas](#5-como-funciona-uma-mesa-de-especialistas) | Metodologia de trabalho |
 | [6. Tipos de Projeto](#6-tipos-de-projeto) | SaaS vs Sistemas Internos |
@@ -47,19 +47,19 @@ A **DEV.com** é uma **fábrica de software virtual** estruturada para trabalhar
 - ✅ **Repetível** - Funciona igual em qualquer sessão de IA
 - ✅ **Escalável** - Adicione especialistas conforme necessidade
 - ✅ **Rastreável** - Histórico de decisões preservado
-- ✅ **Completa** - 44 especialistas cobrindo todas as áreas
+- ✅ **Completa** - 57 especialistas cobrindo todas as áreas
 
 ---
 
 ## 2. Estrutura Organizacional
 
-A DEV.com é organizada em **11 Diretorias**, com **44 especialistas**:
+A DEV.com é organizada em **14 Diretorias**, com **57 especialistas**:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                            🏢 DEV.com v2.0                                    │
 │                      Fábrica de Software Virtual                              │
-│                         44 Especialistas • 11 Diretorias                      │
+│                         57 Especialistas • 14 Diretorias                      │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │                                                                               │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐               │
@@ -124,7 +124,7 @@ A DEV.com é organizada em **11 Diretorias**, com **44 especialistas**:
 | 9 | **Jurídico & Compliance** | 1 | Advogado | Contratos, LGPD, compliance |
 | 10 | **People / RH** | 1 | RH/People | Gestão de pessoas |
 | 11 | **Qualidade & Processos** | 1 | QA de Fluxos | Testes, validação |
-| | **TOTAL** | **44** | | |
+| | **TOTAL** | **57** | | |
 
 ---
 
@@ -906,7 +906,7 @@ Sempre que você traz uma demanda, a DEV.com monta uma **mesa de especialistas**
 
 ```
 "Considere que você é a empresa DEV.com, uma fábrica de software com 
-44 especialistas organizados em 11 diretorias, conforme o documento DEV.com.md
+57 especialistas organizados em 11 diretorias, conforme o documento DEV.com.md
 
 Eu sou o cliente (Planac) e quero criar/ajustar um sistema.
 
@@ -927,7 +927,7 @@ Monte uma mesa com os especialistas relevantes e me dê a visão de cada um."
 
 ```
 📁 Repositório do Projeto
-├── 📄 DEV.com.md           → Este documento (governança + 44 especialistas)
+├── 📄 DEV.com.md           → Este documento (governança + 57 especialistas)
 ├── 📄 README.md            → Resumo do sistema específico
 ├── 📄 CHECKLIST.md         → Status dos documentos
 └── 📁 docs/
@@ -1030,11 +1030,70 @@ Monte uma mesa com os especialistas relevantes e me dê a visão de cada um."
 
 ---
 
+
+---
+
+## 11. Infraestrutura em Nuvem (Orquestrador)
+
+A DEV.com possui um **orquestrador em nuvem** que automatiza a governança do projeto:
+
+### Worker Cloudflare
+
+| Atributo | Valor |
+|----------|-------|
+| **Nome** | `devcom-orchestrator` |
+| **URL** | https://devcom-orchestrator.planacacabamentos.workers.dev |
+| **Banco D1** | `orquestrador-database` |
+| **Cache KV** | `orquestrador-cache` |
+
+### Arquitetura Duas Cabeças
+
+```
+┌─────────────────────────────────────────┐
+│        ORQUESTRADOR DEV.COM             │
+├─────────────────────────────────────────┤
+│                                         │
+│   📨 Requisição                         │
+│        │                                │
+│        ▼                                │
+│   ┌─────────┐                           │
+│   │ Maestro │ ← Coordena análises       │
+│   └────┬────┘                           │
+│        │                                │
+│        ▼                                │
+│   ┌─────────────────────┐               │
+│   │ Mesa de Especialistas│              │
+│   │   (57 disponíveis)   │              │
+│   └─────────────────────┘               │
+│        │                                │
+│   ┌────┴────┐                           │
+│   ▼         ▼                           │
+│ 🔵 Claude  🟢 GPT                       │
+│ (análise)  (validação)                  │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+### Memória Ampliada
+
+O orquestrador mantém **memória persistente** das decisões do projeto:
+
+| Tabela | Função |
+|--------|--------|
+| `memoria_modulos` | Decisões por módulo |
+| `memoria_tecnica` | Arquitetura e tecnologias |
+| `memoria_integracoes` | Status das integrações |
+| `memoria_historico` | Histórico de eventos |
+
+### Repositório
+
+📁 **[Ropetr/dev.com-orquestrador](https://github.com/Ropetr/dev.com-orquestrador)**
+
 ## 📌 Versão e Histórico
 
 | Versão | Data | Alterações |
 |--------|------|------------|
-| 2.0 | 02/12/2025 | Expansão para 44 especialistas e 11 diretorias |
+| 2.0 | 02/12/2025 | Expansão para 57 especialistas e 11 diretorias |
 | 1.0 | 02/12/2025 | Documento inicial com 26 especialistas |
 
 ---
@@ -1043,7 +1102,7 @@ Monte uma mesa com os especialistas relevantes e me dê a visão de cada um."
 
 **DEV.com v2.0** – Fábrica de Software Virtual
 
-*44 Especialistas • 11 Diretorias • Governança Completa*
+*57 Especialistas • 14 Diretorias • Governança Completa*
 
 🎯 Transformando ideias em sistemas com inteligência e estrutura
 
